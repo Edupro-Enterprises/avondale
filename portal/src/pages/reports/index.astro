@@ -1,0 +1,353 @@
+---
+import PortalLayout from '../../layouts/PortalLayout.astro';
+---
+
+<PortalLayout title="Financial Statements">
+	<div class="page-head">
+		<h1>Financial Statements &amp; Statutory Reports</h1>
+		<p>MoPSE-format statements, notes, and control reports — the same figures a Ministry auditor would ask for.</p>
+	</div>
+
+	<!-- Only rendered when printing (see @media print in global.css) - the
+	     on-screen masthead/footer are hidden then, so the printed page/PDF
+	     still needs its own letterhead. -->
+	<div class="print-letterhead">
+		<img src="/avondale-crest.png" alt="Avondale Primary School" />
+		<div>
+			<p class="school-name">AVONDALE PRIMARY SCHOOL</p>
+			<div class="school-meta">Ministry of Primary and Secondary Education (MoPSE) Registered Institution</div>
+			<div class="school-meta">27 Corner King George Rd &amp; Aberdeen Rd, Harare, Zimbabwe | Tel: +263 242 335 443</div>
+			<div class="school-meta" id="print-report-title" style="margin-top:6px; font-weight:700;"></div>
+		</div>
+	</div>
+
+	<div class="report-tabs">
+		<button class="report-tab is-active" data-tab="notes">Notes to the Financial Statements</button>
+		<button class="report-tab" data-tab="performance">Statement of Financial Performance</button>
+		<button class="report-tab" data-tab="position">Statement of Financial Position</button>
+		<button class="report-tab" data-tab="votebook">Vote-Book Variance</button>
+		<button class="report-tab" data-tab="arrears">Fee Arrears Aging</button>
+		<button class="btn btn-secondary btn-print" id="print-btn" style="margin-left:auto;">🖨 Print / Save as PDF</button>
+	</div>
+
+	<div id="loading" style="color:var(--ink-soft); font-size:0.88rem;">Loading…</div>
+
+	<!-- NOTES -->
+	<div class="report-pane is-active" id="pane-notes">
+		<div class="card" id="notes-policies"></div>
+		<div class="section">
+			<h2>Note 10 — Fee Arrears Ageing</h2>
+			<div class="card card-tight" style="overflow-x:auto;">
+				<table class="portal-table" id="note10-table">
+					<thead><tr><th>Age Bucket</th><th class="text-right">Outstanding (USD)</th></tr></thead>
+					<tbody></tbody>
+				</table>
+			</div>
+		</div>
+		<div class="section">
+			<h2>Note 11 — Bank and Cash Float Balances</h2>
+			<div class="card card-tight" style="overflow-x:auto;">
+				<table class="portal-table" id="note11-table">
+					<thead><tr><th>Account</th><th>Currency</th><th class="text-right">Balance</th></tr></thead>
+					<tbody></tbody>
+				</table>
+			</div>
+		</div>
+		<div class="section">
+			<h2>MoPSE Fee Approval Reconciliation</h2>
+			<div class="card card-tight" style="overflow-x:auto;">
+				<table class="portal-table" id="mopse-recon-table">
+					<thead><tr><th>Period</th><th>Approval Ref</th><th class="text-right">Approved (USD)</th><th class="text-right">Fee Structure Total (USD)</th><th>Status</th></tr></thead>
+					<tbody></tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<!-- PERFORMANCE -->
+	<div class="report-pane" id="pane-performance">
+		<div class="report-filters">
+			<label>From <input type="date" id="perf-from" /></label>
+			<label>To <input type="date" id="perf-to" /></label>
+			<button class="btn btn-secondary" id="perf-run">Run</button>
+		</div>
+		<div class="card card-tight" style="overflow-x:auto;">
+			<table class="portal-table" id="perf-table">
+				<thead></thead>
+				<tbody></tbody>
+			</table>
+		</div>
+	</div>
+
+	<!-- POSITION -->
+	<div class="report-pane" id="pane-position">
+		<div class="report-filters">
+			<label>As on <input type="date" id="pos-date" /></label>
+			<button class="btn btn-secondary" id="pos-run">Run</button>
+		</div>
+		<div class="card card-tight" style="overflow-x:auto;">
+			<table class="portal-table" id="pos-table">
+				<thead></thead>
+				<tbody></tbody>
+			</table>
+		</div>
+	</div>
+
+	<!-- VOTE BOOK -->
+	<div class="report-pane" id="pane-votebook">
+		<div class="card card-tight" style="overflow-x:auto;">
+			<table class="portal-table" id="votebook-table">
+				<thead></thead>
+				<tbody></tbody>
+			</table>
+		</div>
+	</div>
+
+	<!-- ARREARS -->
+	<div class="report-pane" id="pane-arrears">
+		<div class="report-filters">
+			<label>As on <input type="date" id="arrears-date" /></label>
+			<label>Due From <input type="date" id="arrears-from" /></label>
+			<label>Due To <input type="date" id="arrears-to" /></label>
+			<label>Class / Stream
+				<select id="arrears-batch"><option value="">All</option></select>
+			</label>
+			<label>Term
+				<select id="arrears-term"><option value="">All</option></select>
+			</label>
+			<label>Year
+				<select id="arrears-year"><option value="">All</option></select>
+			</label>
+			<button class="btn btn-secondary" id="arrears-run">Run</button>
+		</div>
+		<div class="card card-tight" style="overflow-x:auto; max-height:520px; overflow-y:auto;">
+			<table class="portal-table" id="arrears-table">
+				<thead></thead>
+				<tbody></tbody>
+			</table>
+		</div>
+	</div>
+
+	<script>
+		import { api, requireRole } from '../../lib/api.js';
+
+		const session = await requireRole(['Headmaster', 'Bursar', 'SDC Chairperson', 'Deputy Head']);
+
+		function fmt(amount, currency = 'USD') {
+			try {
+				return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount || 0);
+			} catch {
+				return `${currency} ${Number(amount || 0).toFixed(2)}`;
+			}
+		}
+		function esc(s) {
+			const div = document.createElement('div');
+			div.textContent = s ?? '';
+			return div.innerHTML;
+		}
+		function fmtCell(value, fieldtype) {
+			if (value === null || value === undefined || value === '') return '';
+			if (fieldtype === 'Currency') return fmt(value);
+			if (fieldtype === 'Percent') return `${Number(value).toFixed(1)}%`;
+			return esc(value);
+		}
+
+		function renderGenericTable(tableId, columns, data, { totalRowMatch, checkRowMatch } = {}) {
+			const table = document.getElementById(tableId);
+			table.querySelector('thead').innerHTML =
+				'<tr>' +
+				columns.map((c, i) => `<th class="${i === 0 ? '' : 'text-right'}">${esc(c.label)}</th>`).join('') +
+				'</tr>';
+			const body = table.querySelector('tbody');
+			if (!data.length) {
+				body.innerHTML = `<tr><td colspan="${columns.length}" style="color:var(--ink-soft);">No data for this filter.</td></tr>`;
+				return;
+			}
+			body.innerHTML = data
+				.map((row) => {
+					const label = row[columns[0].fieldname] ?? '';
+					let rowClass = '';
+					if (checkRowMatch && String(label).includes(checkRowMatch)) rowClass = 'is-check';
+					else if (totalRowMatch && String(label).includes(totalRowMatch)) rowClass = 'is-total';
+					const cells = columns
+						.map((c, i) => {
+							const v = row[c.fieldname];
+							return `<td class="${i === 0 ? '' : 'text-right tnum'}">${i === 0 ? esc(v ?? '') : fmtCell(v, c.fieldtype)}</td>`;
+						})
+						.join('');
+					return `<tr class="${rowClass}">${cells}</tr>`;
+				})
+				.join('');
+		}
+
+		// ---- Tabs ----
+		const tabs = document.querySelectorAll('.report-tab');
+		const panes = document.querySelectorAll('.report-pane');
+		const loaders = {};
+		const loaded = new Set();
+
+		tabs.forEach((tab) => {
+			tab.addEventListener('click', async () => {
+				tabs.forEach((t) => t.classList.remove('is-active'));
+				panes.forEach((p) => p.classList.remove('is-active'));
+				tab.classList.add('is-active');
+				const key = tab.dataset.tab;
+				document.getElementById(`pane-${key}`).classList.add('is-active');
+				if (!loaded.has(key) && loaders[key]) {
+					loaded.add(key);
+					await loaders[key]();
+				}
+			});
+		});
+
+		// ---- Notes ----
+		loaders.notes = async () => {
+			const notes = await api.getFinancialNotes(null, defaults.as_on_date);
+
+			document.getElementById('notes-policies').innerHTML = notes.accounting_policies
+				.map((p) => `<div class="note-block"><h3>${esc(p.title)}</h3><p>${esc(p.text)}</p></div>`)
+				.join('');
+
+			const b = notes.note_10_arrears_aging.buckets;
+			const note10Body = document.querySelector('#note10-table tbody');
+			note10Body.innerHTML =
+				Object.entries(b)
+					.map(([bucket, amt]) => `<tr><td>${esc(bucket)}</td><td class="text-right tnum">${fmt(amt)}</td></tr>`)
+					.join('') +
+				`<tr class="is-total"><td>Total Receivables</td><td class="text-right tnum">${fmt(notes.note_10_arrears_aging.total)}</td></tr>`;
+
+			const note11Body = document.querySelector('#note11-table tbody');
+			note11Body.innerHTML =
+				notes.note_11_bank_cash_balances
+					.map(
+						(r) =>
+							`<tr><td>${esc(r.account)}</td><td>${esc(r.currency)}</td><td class="text-right tnum">${r.currency} ${Number(r.balance).toFixed(2)}</td></tr>`
+					)
+					.join('') || '<tr><td colspan="3" style="color:var(--ink-soft);">No bank/cash accounts found.</td></tr>';
+
+			const reconBody = document.querySelector('#mopse-recon-table tbody');
+			reconBody.innerHTML =
+				notes.mopse_fee_approval_reconciliation
+					.map((r) => {
+						const ok = r.within_approved_limit;
+						return `
+							<tr>
+								<td>${esc(r.academic_year)} ${esc(r.term)}</td>
+								<td>${esc(r.approval_ref_number || '')}</td>
+								<td class="text-right tnum">${fmt(r.approved_usd_fee)}</td>
+								<td class="text-right tnum">${fmt(r.actual_fee_structure_total)}</td>
+								<td><span class="indicator-pill ${ok ? 'ok' : 'bad'}">${ok ? 'Within Limit' : 'Exceeds Approval'}</span></td>
+							</tr>
+						`;
+					})
+					.join('') || '<tr><td colspan="5" style="color:var(--ink-soft);">No MoPSE fee approval on record.</td></tr>';
+		};
+
+		// ---- Performance ----
+		loaders.performance = async () => {
+			const from_date = document.getElementById('perf-from').value;
+			const to_date = document.getElementById('perf-to').value;
+			const r = await api.getStatutoryReport('mopse_financial_performance', {
+				from_date,
+				to_date,
+				company: defaults.company,
+			});
+			renderGenericTable('perf-table', r.columns, r.data, { totalRowMatch: 'Total', checkRowMatch: 'Net Surplus' });
+		};
+		document.getElementById('perf-run').addEventListener('click', loaders.performance);
+
+		// ---- Position ----
+		loaders.position = async () => {
+			const as_on_date = document.getElementById('pos-date').value;
+			const r = await api.getStatutoryReport('mopse_financial_position', {
+				as_on_date,
+				company: defaults.company,
+			});
+			renderGenericTable('pos-table', r.columns, r.data, {
+				totalRowMatch: 'Subtotal',
+				checkRowMatch: 'Net Position',
+			});
+		};
+		document.getElementById('pos-run').addEventListener('click', loaders.position);
+
+		// ---- Vote Book ----
+		loaders.votebook = async () => {
+			const r = await api.getStatutoryReport('vote_book_variance', {});
+			renderGenericTable('votebook-table', r.columns, r.data);
+		};
+
+		// ---- Arrears ----
+		async function loadArrearsFilterOptions() {
+			const opts = await api.getFeesFilterOptions();
+			const batchSel = document.getElementById('arrears-batch');
+			batchSel.innerHTML =
+				'<option value="">All</option>' + opts.batches.map((b) => `<option value="${esc(b.name)}">${esc(b.name)}</option>`).join('');
+			const termSel = document.getElementById('arrears-term');
+			termSel.innerHTML =
+				'<option value="">All</option>' +
+				opts.academic_terms.map((t) => `<option value="${esc(t.name)}">${esc(t.term_name)}</option>`).join('');
+			const yearSel = document.getElementById('arrears-year');
+			yearSel.innerHTML =
+				'<option value="">All</option>' + opts.academic_years.map((y) => `<option value="${esc(y.name)}">${esc(y.name)}</option>`).join('');
+		}
+
+		loaders.arrears = async () => {
+			const r = await api.getStatutoryReport('fee_arrears_aging', {
+				as_on_date: document.getElementById('arrears-date').value,
+				from_date: document.getElementById('arrears-from').value,
+				to_date: document.getElementById('arrears-to').value,
+				student_batch_name: document.getElementById('arrears-batch').value,
+				academic_term: document.getElementById('arrears-term').value,
+				academic_year: document.getElementById('arrears-year').value,
+			});
+			renderGenericTable('arrears-table', r.columns, r.data);
+		};
+		document.getElementById('arrears-run').addEventListener('click', loaders.arrears);
+		['arrears-batch', 'arrears-term', 'arrears-year'].forEach((id) =>
+			document.getElementById(id).addEventListener('change', loaders.arrears)
+		);
+
+		// ---- Print / Save as PDF ----
+		const REPORT_TITLES = {
+			notes: 'Notes to the Financial Statements',
+			performance: 'Statement of Financial Performance',
+			position: 'Statement of Financial Position',
+			votebook: 'Vote-Book Variance Statement',
+			arrears: 'Age-Analyzed Fee Arrears Schedule',
+		};
+
+		function activeReportKey() {
+			return document.querySelector('.report-tab.is-active')?.dataset.tab || 'notes';
+		}
+
+		function activeReportDateContext(key) {
+			if (key === 'performance') {
+				return `${document.getElementById('perf-from').value} to ${document.getElementById('perf-to').value}`;
+			}
+			if (key === 'position') return `As on ${document.getElementById('pos-date').value}`;
+			if (key === 'arrears') return `As on ${document.getElementById('arrears-date').value}`;
+			return `As on ${new Date().toISOString().slice(0, 10)}`;
+		}
+
+		document.getElementById('print-btn').addEventListener('click', () => {
+			const key = activeReportKey();
+			document.getElementById('print-report-title').textContent =
+				`${REPORT_TITLES[key]} — ${activeReportDateContext(key)}`;
+			window.print();
+		});
+
+		// ---- Init ----
+		let defaults = { company: null, as_on_date: new Date().toISOString().slice(0, 10) };
+		defaults = await api.getReportDefaultFilters();
+
+		document.getElementById('perf-from').value = `${new Date().getFullYear()}-01-01`;
+		document.getElementById('perf-to').value = defaults.as_on_date;
+		document.getElementById('pos-date').value = defaults.as_on_date;
+		document.getElementById('arrears-date').value = defaults.as_on_date;
+		await loadArrearsFilterOptions();
+
+		document.getElementById('loading').style.display = 'none';
+		loaded.add('notes');
+		await loaders.notes();
+	</script>
+</PortalLayout>

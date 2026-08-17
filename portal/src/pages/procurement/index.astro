@@ -1,0 +1,355 @@
+---
+import PortalLayout from '../../layouts/PortalLayout.astro';
+---
+
+<PortalLayout title="Expenditure Requisitions">
+	<div class="page-head">
+		<h1>Expenditure Requisitions</h1>
+		<p>Draft a Purchase Requisition against a Vote-Book budget line, see the unspent balance before you commit, then attach the procurement paperwork.</p>
+	</div>
+
+	<div class="section" id="form-section">
+		<h2>New Requisition</h2>
+		<div class="card">
+			<div style="display:grid; grid-template-columns:1fr 1fr; gap:0 20px;">
+				<div class="field">
+					<label for="f-supplier">Supplier</label>
+					<select id="f-supplier"><option value="">Select supplier…</option></select>
+				</div>
+				<div class="field">
+					<label for="f-new-supplier">Or add a new supplier</label>
+					<div style="display:flex; gap:8px;">
+						<input type="text" id="f-new-supplier" placeholder="New supplier name" />
+						<button type="button" class="btn btn-secondary" id="add-supplier-btn">Add</button>
+					</div>
+				</div>
+				<div class="field">
+					<label for="f-fiscal-year">Fiscal Year</label>
+					<select id="f-fiscal-year"></select>
+				</div>
+				<div class="field">
+					<label for="f-schedule-date">Needed By</label>
+					<input type="date" id="f-schedule-date" />
+				</div>
+			</div>
+
+			<h3 style="font-size:0.9rem; margin-top:10px;">Line Items</h3>
+			<div style="overflow-x:auto;">
+				<table class="portal-table" id="items-table">
+					<thead>
+						<tr>
+							<th style="min-width:180px;">Description</th>
+							<th style="min-width:180px;">Expense Account</th>
+							<th style="min-width:160px;">Fund Category</th>
+							<th style="min-width:70px;">Qty</th>
+							<th style="min-width:100px;">Rate</th>
+							<th style="min-width:100px;">Amount</th>
+							<th style="min-width:160px;">Available Balance</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody id="items-body"></tbody>
+				</table>
+			</div>
+			<button type="button" class="btn btn-secondary" id="add-row-btn" style="margin-top:10px;">+ Add Line</button>
+
+			<div style="margin-top:20px;">
+				<button type="button" class="btn btn-primary" id="save-draft-btn">Save as Draft</button>
+			</div>
+			<div id="create-result" style="margin-top:14px;"></div>
+		</div>
+	</div>
+
+	<!-- Shown after a draft is created: file uploads + submit -->
+	<div class="section" id="attachments-section" style="display:none;">
+		<h2>Procurement File Attachments</h2>
+		<div class="card">
+			<p style="color:var(--ink-soft); font-size:0.88rem; margin-top:0;">Mandatory before this requisition can be submitted: 3 competitive vendor quotations, a comparative schedule, and the supplier's proforma invoice.</p>
+			<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px;">
+				<div class="field">
+					<label>3 Competitive Vendor Quotations</label>
+					<input type="file" id="file-quotations" multiple accept=".pdf,.jpg,.jpeg,.png" />
+					<div class="indicator-pill" id="status-quotations" style="margin-top:6px;">Not attached</div>
+				</div>
+				<div class="field">
+					<label>Comparative Schedule</label>
+					<input type="file" id="file-comparative" accept=".pdf,.jpg,.jpeg,.png" />
+					<div class="indicator-pill" id="status-comparative" style="margin-top:6px;">Not attached</div>
+				</div>
+				<div class="field">
+					<label>Supplier Proforma Invoice</label>
+					<input type="file" id="file-proforma" accept=".pdf,.jpg,.jpeg,.png" />
+					<div class="indicator-pill" id="status-proforma" style="margin-top:6px;">Not attached</div>
+				</div>
+			</div>
+			<div style="margin-top:16px; display:flex; gap:10px; align-items:center;">
+				<button type="button" class="btn btn-primary" id="submit-req-btn">Submit Requisition</button>
+				<span id="submit-result" style="font-size:0.85rem;"></span>
+			</div>
+		</div>
+	</div>
+
+	<div class="section">
+		<h2>Requisitions on Record</h2>
+		<div class="card card-tight" style="overflow-x:auto;">
+			<table class="portal-table" id="req-table">
+				<thead>
+					<tr>
+						<th>Requisition</th>
+						<th>Supplier</th>
+						<th>Fund</th>
+						<th>Needed By</th>
+						<th class="text-right">Amount</th>
+						<th>Status</th>
+						<th>Compliance</th>
+						<th>Print</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</div>
+	</div>
+
+	<script>
+		import { api, requireRole } from '../../lib/api.js';
+
+		const session = await requireRole(['Headmaster', 'Bursar', 'SDC Chairperson', 'Deputy Head']);
+		const canDraft = session.primary_role === 'Bursar';
+
+		if (!canDraft) {
+			document.getElementById('form-section').style.display = 'none';
+			document.getElementById('attachments-section').style.display = 'none';
+		}
+
+		function fmt(amount) {
+			try {
+				return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount || 0);
+			} catch {
+				return `$${Number(amount || 0).toFixed(2)}`;
+			}
+		}
+		function esc(s) {
+			const div = document.createElement('div');
+			div.textContent = s ?? '';
+			return div.innerHTML;
+		}
+
+		let options = { expense_accounts: [], fund_categories: [], suppliers: [], fiscal_years: [] };
+		let rowCount = 0;
+		let currentRequisition = null;
+
+		function accountOptions() {
+			return options.expense_accounts.map((a) => `<option value="${esc(a.name)}">${esc(a.name)}</option>`).join('');
+		}
+		function fundOptions() {
+			return options.fund_categories.map((f) => `<option value="${esc(f)}">${esc(f)}</option>`).join('');
+		}
+
+		function addRow() {
+			const id = rowCount++;
+			const tr = document.createElement('tr');
+			tr.dataset.rowId = id;
+			tr.innerHTML = `
+				<td><input type="text" class="row-desc" placeholder="What are we buying?" style="width:100%;" /></td>
+				<td><select class="row-account" style="width:100%;"><option value="">Select…</option>${accountOptions()}</select></td>
+				<td><select class="row-fund" style="width:100%;"><option value="">Select…</option>${fundOptions()}</select></td>
+				<td><input type="number" class="row-qty" value="1" min="1" step="1" style="width:100%;" /></td>
+				<td><input type="number" class="row-rate" value="0" min="0" step="0.01" style="width:100%;" /></td>
+				<td class="row-amount text-right tnum">$0.00</td>
+				<td class="row-balance" style="font-size:0.8rem; color:var(--ink-soft);">—</td>
+				<td><button type="button" class="btn-logout row-remove" title="Remove">✕</button></td>
+			`;
+			document.getElementById('items-body').appendChild(tr);
+
+			const qty = tr.querySelector('.row-qty');
+			const rate = tr.querySelector('.row-rate');
+			const account = tr.querySelector('.row-account');
+			const fund = tr.querySelector('.row-fund');
+			const amountCell = tr.querySelector('.row-amount');
+			const balanceCell = tr.querySelector('.row-balance');
+
+			function recalcAmount() {
+				const amt = (parseFloat(qty.value) || 0) * (parseFloat(rate.value) || 0);
+				amountCell.textContent = fmt(amt);
+			}
+			async function refreshBalance() {
+				const fiscalYear = document.getElementById('f-fiscal-year').value;
+				if (!account.value || !fund.value || !fiscalYear) {
+					balanceCell.textContent = '—';
+					return;
+				}
+				balanceCell.textContent = 'Checking…';
+				try {
+					const bal = await api.getVoteBookBalance(account.value, fund.value, fiscalYear);
+					if (!bal || !bal.found) {
+						balanceCell.innerHTML = `<span class="indicator-pill bad">No Vote-Book budget</span>`;
+					} else {
+						const ok = bal.available_balance > 0;
+						balanceCell.innerHTML = `<span class="indicator-pill ${ok ? 'ok' : 'bad'}">${fmt(bal.available_balance)} available</span>`;
+					}
+				} catch {
+					balanceCell.textContent = '—';
+				}
+			}
+
+			qty.addEventListener('input', recalcAmount);
+			rate.addEventListener('input', recalcAmount);
+			account.addEventListener('change', refreshBalance);
+			fund.addEventListener('change', refreshBalance);
+			tr.querySelector('.row-remove').addEventListener('click', () => tr.remove());
+		}
+
+		document.getElementById('add-row-btn')?.addEventListener('click', addRow);
+
+		document.getElementById('add-supplier-btn')?.addEventListener('click', async () => {
+			const nameInput = document.getElementById('f-new-supplier');
+			const name = nameInput.value.trim();
+			if (!name) return;
+			try {
+				const supplierName = await api.createSupplier(name);
+				const sel = document.getElementById('f-supplier');
+				const opt = document.createElement('option');
+				opt.value = supplierName;
+				opt.textContent = supplierName;
+				sel.appendChild(opt);
+				sel.value = supplierName;
+				nameInput.value = '';
+			} catch (err) {
+				alert(err.message);
+			}
+		});
+
+		document.getElementById('save-draft-btn')?.addEventListener('click', async () => {
+			const supplier = document.getElementById('f-supplier').value;
+			const fiscalYear = document.getElementById('f-fiscal-year').value;
+			const scheduleDate = document.getElementById('f-schedule-date').value;
+			const rows = [...document.querySelectorAll('#items-body tr')];
+
+			if (!supplier) return alert('Select or add a supplier first.');
+			if (!scheduleDate) return alert('Set a "Needed By" date.');
+			if (!rows.length) return alert('Add at least one line item.');
+
+			const items = rows.map((tr) => ({
+				description: tr.querySelector('.row-desc').value,
+				expense_account: tr.querySelector('.row-account').value,
+				funding_category: tr.querySelector('.row-fund').value,
+				qty: tr.querySelector('.row-qty').value,
+				rate: tr.querySelector('.row-rate').value,
+			}));
+
+			const btn = document.getElementById('save-draft-btn');
+			btn.disabled = true;
+			btn.textContent = 'Saving…';
+			try {
+				const name = await api.createRequisition(supplier, fiscalYear, scheduleDate, items);
+				currentRequisition = name;
+				document.getElementById('create-result').innerHTML =
+					`<div class="alert-band is-ok"><strong>Draft saved: ${esc(name)}</strong>Now attach the procurement files below.</div>`;
+				document.getElementById('attachments-section').style.display = 'block';
+				document.getElementById('attachments-section').scrollIntoView({ behavior: 'smooth' });
+				await loadRequisitions();
+			} catch (err) {
+				document.getElementById('create-result').innerHTML =
+					`<div class="alert-band is-danger"><strong>Could not save requisition</strong>${esc(err.message)}</div>`;
+			} finally {
+				btn.disabled = false;
+				btn.textContent = 'Save as Draft';
+			}
+		});
+
+		function wireFileInput(inputId, statusId, flagKey, multiple) {
+			document.getElementById(inputId)?.addEventListener('change', async (e) => {
+				if (!currentRequisition) return alert('Save the requisition draft first.');
+				const files = [...e.target.files];
+				if (!files.length) return;
+				const statusEl = document.getElementById(statusId);
+				statusEl.textContent = 'Uploading…';
+				try {
+					for (const file of files) {
+						await api.uploadFile(file, 'Purchase Order', currentRequisition);
+					}
+					await api.attachProcurementFiles(currentRequisition, { [flagKey]: 1 });
+					statusEl.textContent = multiple ? `${files.length} file(s) attached` : 'Attached';
+					statusEl.classList.add('ok');
+					await loadRequisitions();
+				} catch (err) {
+					statusEl.textContent = 'Upload failed';
+					statusEl.classList.add('bad');
+					alert(err.message);
+				}
+			});
+		}
+		wireFileInput('file-quotations', 'status-quotations', 'quotations_attached', true);
+		wireFileInput('file-comparative', 'status-comparative', 'comparative_schedule_attached', false);
+		wireFileInput('file-proforma', 'status-proforma', 'proforma_invoice_attached', false);
+
+		document.getElementById('submit-req-btn')?.addEventListener('click', async () => {
+			if (!currentRequisition) return;
+			const resultEl = document.getElementById('submit-result');
+			try {
+				await api.submitRequisition(currentRequisition);
+				resultEl.textContent = 'Submitted — ready for physical sign-off.';
+				resultEl.style.color = 'var(--green)';
+				await loadRequisitions();
+			} catch (err) {
+				resultEl.textContent = err.message;
+				resultEl.style.color = 'var(--red)';
+			}
+		});
+
+		function printUrl(name) {
+			const params = new URLSearchParams({
+				doctype: 'Purchase Order',
+				name,
+				format: 'Purchase Order Voucher',
+				no_letterhead: '0',
+			});
+			return `/printview?${params.toString()}`;
+		}
+
+		async function loadRequisitions() {
+			const rows = await api.listRequisitions();
+			const body = document.querySelector('#req-table tbody');
+			if (!rows.length) {
+				body.innerHTML = '<tr><td colspan="8" style="color:var(--ink-soft);">No requisitions drafted yet.</td></tr>';
+				return;
+			}
+			body.innerHTML = rows
+				.map((r) => {
+					const statusLabel = r.docstatus === 1 ? 'Submitted' : r.docstatus === 2 ? 'Cancelled' : 'Draft';
+					const complianceOk = r.quotations_attached && r.comparative_schedule_attached && r.proforma_invoice_attached;
+					return `
+						<tr>
+							<td>${esc(r.name)}</td>
+							<td>${esc(r.supplier)}</td>
+							<td style="font-size:0.78rem;">${esc(r.funding_category || '')}</td>
+							<td>${r.schedule_date ? new Date(r.schedule_date).toLocaleDateString('en-GB') : ''}</td>
+							<td class="text-right tnum">${fmt(r.grand_total)}</td>
+							<td><span class="indicator-pill ${r.docstatus === 1 ? 'ok' : ''}">${statusLabel}</span></td>
+							<td><span class="indicator-pill ${complianceOk ? 'ok' : 'bad'}">${complianceOk ? 'Complete' : 'Incomplete'}</span></td>
+							<td><a href="${printUrl(r.name)}" target="_blank" rel="noopener">Print / PDF</a></td>
+						</tr>
+					`;
+				})
+				.join('');
+		}
+
+		async function init() {
+			options = await api.getProcurementFormOptions();
+			const supplierSel = document.getElementById('f-supplier');
+			if (supplierSel) {
+				supplierSel.innerHTML =
+					'<option value="">Select supplier…</option>' +
+					options.suppliers.map((s) => `<option value="${esc(s.name)}">${esc(s.supplier_name)}</option>`).join('');
+			}
+			const fySel = document.getElementById('f-fiscal-year');
+			if (fySel) {
+				fySel.innerHTML = options.fiscal_years.map((y) => `<option value="${esc(y.name)}">${esc(y.name)}</option>`).join('');
+				fySel.value = options.default_fiscal_year;
+			}
+			if (canDraft) addRow();
+			await loadRequisitions();
+		}
+		init();
+	</script>
+</PortalLayout>

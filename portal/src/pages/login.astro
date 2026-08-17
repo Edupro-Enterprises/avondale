@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Sign In">
+	<div class="login-shell">
+		<div class="login-card">
+			<a class="brand" href="/">
+				<img src="/logo.png" alt="Edupro" width="180" height="38" />
+			</a>
+			<p class="login-sub">Avondale Primary School — Financial Portal</p>
+
+			<div class="login-error" id="login-error"></div>
+
+			<form id="login-form">
+				<div class="field">
+					<label for="usr">Email</label>
+					<input type="email" id="usr" name="usr" autocomplete="username" required />
+				</div>
+				<div class="field">
+					<label for="pwd">Password</label>
+					<input type="password" id="pwd" name="pwd" autocomplete="current-password" required />
+				</div>
+				<button class="btn btn-primary btn-block" type="submit" id="login-btn">Sign In</button>
+			</form>
+		</div>
+	</div>
+
+	<script>
+		import { api } from '../lib/api.js';
+
+		const ROLE_LANDING = {
+			Bursar: '/bursar/',
+			'Deputy Head': '/auditor/',
+			Headmaster: '/oversight/',
+			'SDC Chairperson': '/oversight/',
+		};
+
+		// If already logged in, skip straight to the right page.
+		api
+			.getSession()
+			.then((session) => {
+				window.location.href = ROLE_LANDING[session.primary_role] || '/oversight/';
+			})
+			.catch(() => {
+				/* not logged in yet - stay on this page */
+			});
+
+		const form = document.getElementById('login-form');
+		const errorBox = document.getElementById('login-error');
+		const btn = document.getElementById('login-btn');
+
+		form?.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			errorBox.classList.remove('is-visible');
+			btn.disabled = true;
+			btn.textContent = 'Signing in…';
+
+			const usr = document.getElementById('usr').value.trim();
+			const pwd = document.getElementById('pwd').value;
+
+			try {
+				await api.login(usr, pwd);
+				const session = await api.getSession();
+				window.location.href = ROLE_LANDING[session.primary_role] || '/oversight/';
+			} catch (err) {
+				errorBox.textContent = 'Incorrect email or password.';
+				errorBox.classList.add('is-visible');
+				btn.disabled = false;
+				btn.textContent = 'Sign In';
+			}
+		});
+	</script>
+</BaseLayout>

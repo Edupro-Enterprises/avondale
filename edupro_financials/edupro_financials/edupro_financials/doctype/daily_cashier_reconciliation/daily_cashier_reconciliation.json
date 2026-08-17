@@ -1,0 +1,177 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "format:DCR-{cashier_user}-{reconciliation_date}",
+ "creation": "2026-08-16 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "cashier_user",
+  "reconciliation_date",
+  "column_break_1",
+  "opening_float",
+  "section_break_counts",
+  "usd_cash_counted",
+  "zig_cash_counted",
+  "column_break_2",
+  "ecocash_batch_total",
+  "zipit_batch_total",
+  "section_break_system",
+  "system_expected_usd",
+  "variance_usd",
+  "column_break_3",
+  "bursar_signature",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "cashier_user",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Cashier",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "reconciliation_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Reconciliation Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "opening_float",
+   "fieldtype": "Currency",
+   "label": "Opening Float (USD)"
+  },
+  {
+   "fieldname": "section_break_counts",
+   "fieldtype": "Section Break",
+   "label": "Blind Count \u2014 Physical & Digital Takings"
+  },
+  {
+   "default": "0",
+   "fieldname": "usd_cash_counted",
+   "fieldtype": "Currency",
+   "label": "USD Cash Counted"
+  },
+  {
+   "default": "0",
+   "fieldname": "zig_cash_counted",
+   "fieldtype": "Currency",
+   "label": "ZiG Cash Counted",
+   "options": "ZiG"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "ecocash_batch_total",
+   "fieldtype": "Currency",
+   "label": "EcoCash Batch Total"
+  },
+  {
+   "default": "0",
+   "fieldname": "zipit_batch_total",
+   "fieldtype": "Currency",
+   "label": "ZIPIT Batch Total"
+  },
+  {
+   "fieldname": "section_break_system",
+   "fieldtype": "Section Break",
+   "label": "System Reconciliation (computed on submit)"
+  },
+  {
+   "default": "0",
+   "fieldname": "system_expected_usd",
+   "fieldtype": "Currency",
+   "label": "System Expected USD",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "variance_usd",
+   "fieldtype": "Currency",
+   "label": "Variance (USD)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "bursar_signature",
+   "fieldtype": "Signature",
+   "label": "Bursar Signature"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Daily Cashier Reconciliation",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "module": "Edupro Financials",
+ "name": "Daily Cashier Reconciliation",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Accounts Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Accounts User",
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

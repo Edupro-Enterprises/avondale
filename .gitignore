@@ -1,0 +1,21 @@
+# Node / Astro (portal)
+portal/node_modules/
+portal/.astro/
+portal/dist/
+portal/npm-debug.log*
+
+# Python (edupro_financials)
+edupro_financials/**/__pycache__/
+edupro_financials/**/*.pyc
+edupro_financials/**/*.pyo
+
+# Frappe build artifacts (none should live in the app source, but just in case)
+**/*.egg-info/
+
+# Docker/infra secrets - never commit real credentials
+infra/.env
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp

@@ -1,0 +1,60 @@
+---
+---
+
+<header class="masthead">
+	<div class="wrap">
+		<a class="brand" href="/" aria-label="Edupro — Home">
+			<img src="/logo.png" alt="Edupro" width="120" height="26" />
+		</a>
+		<span class="masthead-role badge-soft badge" id="role-badge" style="display:none;"></span>
+		<div class="masthead-spacer"></div>
+		<nav class="masthead-nav">
+			<a href="/fees/" id="nav-fees" style="display:none;">Student Fees</a>
+			<a href="/procurement/" id="nav-procurement" style="display:none;">Requisitions</a>
+			<a href="/igp/" id="nav-igp" style="display:none;">IGP Sales</a>
+			<a href="/exemptions/" id="nav-exemptions" style="display:none;">Exemptions</a>
+			<a href="/reports/" id="nav-reports" style="display:none;">Financial Statements</a>
+		</nav>
+		<div class="masthead-user">
+			<span class="name" id="user-name"></span>
+			<button class="btn-logout" id="logout-btn" type="button">Log out</button>
+		</div>
+	</div>
+</header>
+
+<script>
+	import { api } from '../lib/api.js';
+
+	async function init() {
+		try {
+			const session = await api.getSession();
+			const nameEl = document.getElementById('user-name');
+			const roleEl = document.getElementById('role-badge');
+			if (nameEl) nameEl.textContent = session.full_name;
+			if (roleEl && session.primary_role) {
+				roleEl.textContent = session.primary_role;
+				roleEl.style.display = '';
+			}
+			const reportsLink = document.getElementById('nav-reports');
+			const feesLink = document.getElementById('nav-fees');
+			const procurementLink = document.getElementById('nav-procurement');
+			const igpLink = document.getElementById('nav-igp');
+			const exemptionsLink = document.getElementById('nav-exemptions');
+			const reportRoles = ['Headmaster', 'Bursar', 'SDC Chairperson', 'Deputy Head'];
+			[reportsLink, feesLink, procurementLink, igpLink, exemptionsLink].forEach((link) => {
+				if (link && reportRoles.includes(session.primary_role)) link.style.display = '';
+			});
+		} catch (e) {
+			window.location.href = '/login';
+		}
+	}
+	init();
+
+	document.getElementById('logout-btn')?.addEventListener('click', async () => {
+		try {
+			await api.logout();
+		} finally {
+			window.location.href = '/login';
+		}
+	});
+</script>

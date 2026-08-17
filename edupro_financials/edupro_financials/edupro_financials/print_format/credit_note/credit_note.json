@@ -1,0 +1,21 @@
+{
+ "absolute_value": 0,
+ "align_labels_right": 0,
+ "creation": "2026-08-16 00:00:00.000000",
+ "custom_format": 1,
+ "disabled": 0,
+ "doc_type": "Fees",
+ "docstatus": 0,
+ "doctype": "Print Format",
+ "html": "<style>\n\t.print-format table, .print-format tr,\n\t.print-format td, .print-format div, .print-format p {\n\t\tline-height: 145%;\n\t\tvertical-align: middle;\n\t}\n\t.voucher-title {\n\t\ttext-align: center;\n\t\tfont-weight: 700;\n\t\tfont-size: 15px;\n\t\tletter-spacing: 1px;\n\t\tmargin: 8px 0 14px;\n\t\tborder-top: 2px solid #000;\n\t\tborder-bottom: 2px solid #000;\n\t\tpadding: 6px 0;\n\t}\n\t.voucher-meta td { padding: 3px 0; font-size: 12px; }\n\t.sig-row { margin-top: 30px; }\n\t.sig-line { border-top: 1px solid #000; margin-top: 40px; padding-top: 4px; font-size: 11px; }\n</style>\n{% if letter_head %}{{ letter_head }}{% endif %}\n\n<div class=\"voucher-title\">CREDIT NOTE / REVERSE RECEIPT ENTRY</div>\n\n<table class=\"voucher-meta\" style=\"width: 100%;\">\n\t<tr>\n\t\t<td style=\"width: 50%;\"><b>{{ _(\"Original Receipt No\") }}:</b> {{ doc.get(\"receipt_no\") or doc.name }}</td>\n\t\t<td><b>{{ _(\"Status\") }}:</b> {% if doc.docstatus == 2 %}{{ _(\"CANCELLED\") }}{% else %}{{ _(\"Active\") }}{% endif %}</td>\n\t</tr>\n\t<tr>\n\t\t<td><b>{{ _(\"Student\") }}:</b> {{ doc.student_name }}</td>\n\t\t<td><b>{{ _(\"Original Date\") }}:</b> {{ doc.get_formatted(\"posting_date\") }}</td>\n\t</tr>\n</table>\n\n<hr>\n\n<table class=\"table table-condensed\" style=\"width: 100%;\">\n\t<tbody>\n\t\t<tr><td>{{ _(\"Original Amount\") }}</td><td class=\"text-right\">{{ doc.get_formatted(\"grand_total\") }}</td></tr>\n\t</tbody>\n</table>\n\n{% if doc.docstatus == 2 %}\n<p style=\"margin-top:14px;\"><b>{{ _(\"Reason for Cancellation / Adjustment\") }}:</b></p>\n<p style=\"border:1px solid #000; padding:10px; min-height:40px;\">{{ doc.get(\"cancellation_reason\") or \"\" }}</p>\n<p style=\"text-align:center; font-weight:700; border:1px solid #000; padding:6px; margin-top:14px;\">\n\t{{ _(\"THIS RECEIPT HAS BEEN FORMALLY REVERSED. A REVERSING GL ENTRY HAS BEEN POSTED.\") }}\n</p>\n{% else %}\n<p style=\"margin-top:14px; color:#a00;\">{{ _(\"This document is still active and has not been cancelled - no credit note applies.\") }}</p>\n{% endif %}\n\n<div class=\"sig-row\" style=\"display:flex; gap: 40px;\">\n\t<div style=\"flex:1;\"><div class=\"sig-line\">{{ _(\"Bursar\") }}</div></div>\n\t<div style=\"flex:1;\"><div class=\"sig-line\">{{ _(\"Headmaster / Auditor\") }}</div></div>\n</div>\n",
+ "idx": 1,
+ "line_breaks": 0,
+ "module": "Edupro Financials",
+ "name": "Credit Note",
+ "owner": "Administrator",
+ "print_format_builder": 0,
+ "print_format_type": "Jinja",
+ "raw_printing": 0,
+ "show_section_headings": 0,
+ "standard": "Yes"
+}

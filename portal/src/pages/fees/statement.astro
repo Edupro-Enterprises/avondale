@@ -1,0 +1,120 @@
+---
+import PortalLayout from '../../layouts/PortalLayout.astro';
+---
+
+<PortalLayout title="Student Statement">
+	<div class="page-head">
+		<h1>Student Financial Statement</h1>
+		<p id="student-subtitle" style="color:var(--ink-soft);">Loading…</p>
+	</div>
+
+	<!-- Print-only letterhead, same pattern as the statutory reports page -->
+	<div class="print-letterhead">
+		<img src="/avondale-crest.png" alt="Avondale Primary School" />
+		<div>
+			<p class="school-name">AVONDALE PRIMARY SCHOOL</p>
+			<div class="school-meta">Ministry of Primary and Secondary Education (MoPSE) Registered Institution</div>
+			<div class="school-meta">27 Corner King George Rd &amp; Aberdeen Rd, Harare, Zimbabwe | Tel: +263 242 335 443</div>
+			<div class="school-meta" id="print-statement-title" style="margin-top:6px; font-weight:700;"></div>
+		</div>
+	</div>
+
+	<div class="section no-print" style="display:flex; gap:10px; align-items:center;">
+		<a href="/fees/" class="btn btn-secondary">&larr; Back to Search</a>
+		<button class="btn btn-primary btn-print" id="print-btn" style="margin-left:auto;">🖨 Print / Save as PDF</button>
+	</div>
+
+	<div class="stat-grid section" id="summary-stats"></div>
+
+	<div class="card card-tight" style="overflow-x:auto;">
+		<table class="portal-table" id="statement-table">
+			<thead>
+				<tr>
+					<th>Term / Year</th>
+					<th>Fee Component</th>
+					<th>Fund</th>
+					<th>Due Date</th>
+					<th>Status</th>
+					<th class="text-right">Amount</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</div>
+
+	<p style="text-align:center; font-size:0.8rem; color:var(--ink-soft); margin-top:24px;">
+		This statement reflects all fee lines on record for this student as of the date printed above.
+	</p>
+
+	<script>
+		import { api, requireRole } from '../../lib/api.js';
+
+		await requireRole(['Headmaster', 'Bursar', 'SDC Chairperson', 'Deputy Head']);
+
+		function fmt(amount) {
+			try {
+				return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount || 0);
+			} catch {
+				return `$${Number(amount || 0).toFixed(2)}`;
+			}
+		}
+		function esc(s) {
+			const div = document.createElement('div');
+			div.textContent = s ?? '';
+			return div.innerHTML;
+		}
+
+		const params = new URLSearchParams(window.location.search);
+		const student = params.get('student');
+		const academicTerm = params.get('academic_term') || undefined;
+		const academicYear = params.get('academic_year') || undefined;
+
+		if (!student) {
+			document.getElementById('student-subtitle').textContent = 'No student specified.';
+		} else {
+			api.getStudentStatement(student, academicTerm, academicYear).then((stmt) => {
+				document.title = `Statement — ${stmt.student_name}`;
+				document.getElementById('student-subtitle').textContent =
+					`${stmt.student_name} (${stmt.student}) — Class ${stmt.student_batch_name || 'n/a'}`;
+
+				const scopeLabel = academicTerm ? academicTerm : academicYear ? `Academic Year ${academicYear}` : 'All Records';
+				document.getElementById('print-statement-title').textContent =
+					`Student Financial Statement — ${stmt.student_name} (${stmt.student}) — ${scopeLabel}`;
+
+				document.getElementById('summary-stats').innerHTML = `
+					<div class="stat-card">
+						<div class="value">${fmt(stmt.grand_total)}</div>
+						<div class="label">Total Billed</div>
+					</div>
+					<div class="stat-card ${stmt.outstanding_total > 0 ? 'is-alert' : 'is-ok'}">
+						<div class="value">${fmt(stmt.outstanding_total)}</div>
+						<div class="label">Outstanding Balance</div>
+					</div>
+				`;
+
+				const body = document.querySelector('#statement-table tbody');
+				if (!stmt.lines.length) {
+					body.innerHTML = '<tr><td colspan="6" style="color:var(--ink-soft);">No fee records found.</td></tr>';
+				} else {
+					body.innerHTML = stmt.lines
+						.map((l) => {
+							const paid = l.status === 'Paid';
+							return `
+								<tr>
+									<td>${esc(l.academic_term || l.academic_year || '')}</td>
+									<td>${esc(l.fees_category)}</td>
+									<td style="font-size:0.78rem;">${esc(l.fund || '')}</td>
+									<td>${l.due_date ? new Date(l.due_date).toLocaleDateString('en-GB') : ''}</td>
+									<td><span class="indicator-pill ${paid ? 'ok' : 'bad'}">${esc(l.status)}</span></td>
+									<td class="text-right tnum">${fmt(l.amount)}</td>
+								</tr>
+							`;
+						})
+						.join('');
+				}
+			});
+		}
+
+		document.getElementById('print-btn').addEventListener('click', () => window.print());
+	</script>
+</PortalLayout>
