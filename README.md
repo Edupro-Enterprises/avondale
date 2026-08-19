@@ -1,6 +1,22 @@
 # Avondale — Edupro School Financial Statements System
 
-A multi-currency (USD/ZiG) school financial management system built for Avondale Primary School, Zimbabwe, on Frappe/ERPNext v15. Generates the statutory financial reports, operational control reports, and transactional vouchers required by Ministry of Primary and Secondary Education (MoPSE) auditors.
+[![License: MIT](https://img.shields.io/badge/license-MIT-informational)](LICENSE)
+[![frappe](https://img.shields.io/badge/frappe-v15-0089FF)](https://frappeframework.com/)
+[![erpnext](https://img.shields.io/badge/erpnext-v15-0089FF)](https://erpnext.com/)
+[![astro](https://img.shields.io/badge/astro-portal-FF5D01)](https://astro.build/)
+[![docker](https://img.shields.io/badge/docker-compose-2496ED)](infra/docker-compose.yml)
+[![school-management](https://img.shields.io/badge/topic-school--management-6f42c1)](https://github.com/Edupro-Enterprises/avondale)
+[![financial-management](https://img.shields.io/badge/topic-financial--management-6f42c1)](https://github.com/Edupro-Enterprises/avondale)
+[![fund-accounting](https://img.shields.io/badge/topic-fund--accounting-6f42c1)](https://github.com/Edupro-Enterprises/avondale)
+[![accounting](https://img.shields.io/badge/topic-accounting-6f42c1)](https://github.com/Edupro-Enterprises/avondale)
+[![zimbabwe](https://img.shields.io/badge/topic-zimbabwe-6f42c1)](https://github.com/Edupro-Enterprises/avondale)
+[![education](https://img.shields.io/badge/topic-education-6f42c1)](https://github.com/Edupro-Enterprises/avondale)
+
+A multi-currency (USD/ZiG) school financial management system built for Avondale Primary School, Zimbabwe, on Frappe/ERPNext v15. It generates the statutory financial reports, operational control reports, and transactional vouchers required by Ministry of Primary and Secondary Education (MoPSE) auditors, and gives non-technical school staff (Bursar, Headmaster, SDC Chairperson, Deputy Head) a dedicated web portal so none of them ever need Frappe Desk access.
+
+Core capabilities: strict fund accounting across four statutory funds (SDC/SDA, Tuition/Government, BEAM & Donor Restricted, IGP) enforced at the GL Entry level via an Accounting Dimension; pre-commitment Vote-Book budget control on purchase requisitions; un-gapable sequential official receipt numbering with automatic gap detection; MoPSE-format statutory reports (Statement of Financial Performance/Position, Vote-Book Variance, Age-Analyzed Fee Arrears, Notes to the Financial Statements); blind-count daily till reconciliation; an auditor exception dashboard (cancelled receipts, backdated vouchers, manual cash entries, till variances); IGP enterprise counter sales with per-project trading accounts; and student fee exemptions/waivers (BEAM, staff discount, hardship) with mandatory supporting evidence.
+
+**For a full technical walkthrough of every doctype, hook, permission grant, and the portal's REST contract with the backend — written for a third-party Frappe developer maintaining this system — see [docs/TECHNICAL.md](docs/TECHNICAL.md).**
 
 ## Structure
 
