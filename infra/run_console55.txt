@@ -1,0 +1,1 @@
+exec(open('/home/frappe/frappe-bench/check_grade2_state.py').read(), globals())

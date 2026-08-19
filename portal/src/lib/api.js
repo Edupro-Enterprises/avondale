@@ -25,7 +25,11 @@ async function call(method, args, { method: httpMethod = 'POST' } = {}) {
 		}
 	} else {
 		opts.headers['Content-Type'] = 'application/x-www-form-urlencoded';
-		opts.body = new URLSearchParams(args || {});
+		const body = new URLSearchParams();
+		for (const [k, v] of Object.entries(args || {})) {
+			if (v !== undefined && v !== null) body.set(k, v);
+		}
+		opts.body = body;
 	}
 
 	const res = await fetch(url, opts);
@@ -185,6 +189,67 @@ export const api = {
 	},
 	async listExemptions() {
 		return call('edupro_financials.exemptions.list_exemptions', {}, { method: 'GET' });
+	},
+	async getBillingOptions() {
+		return call('edupro_financials.billing.get_billing_options', {}, { method: 'GET' });
+	},
+	async previewTermBill(program, academicYear) {
+		return call(
+			'edupro_financials.billing.preview_term_bill',
+			{ program, academic_year: academicYear },
+			{ method: 'GET' }
+		);
+	},
+	async billTerm(program, academicYear, academicTerm, dueDate) {
+		return call('edupro_financials.billing.bill_term', {
+			program,
+			academic_year: academicYear,
+			academic_term: academicTerm,
+			due_date: dueDate,
+		});
+	},
+	async getProfileFormOptions() {
+		return call('edupro_financials.student_profile.get_profile_form_options', {}, { method: 'GET' });
+	},
+	async getStudentProfile(student) {
+		return call('edupro_financials.student_profile.get_student_profile', { student }, { method: 'GET' });
+	},
+	async updateStudentProfile(student, fields) {
+		return call('edupro_financials.student_profile.update_student_profile', { student, ...fields });
+	},
+	async updateStudentPhoto(student, fileUrl) {
+		return call('edupro_financials.student_profile.update_student_photo', { student, file_url: fileUrl });
+	},
+	async upsertGuardian(payload) {
+		return call('edupro_financials.student_profile.upsert_guardian', payload);
+	},
+	async getTodayRate() {
+		return call('edupro_financials.exchange_rate.get_today_rate', {}, { method: 'GET' });
+	},
+	async setDailyRate(rate) {
+		return call('edupro_financials.exchange_rate.set_daily_rate', { rate });
+	},
+	async getReceiptingFormOptions() {
+		return call('edupro_financials.receipting.get_receipting_form_options', {}, { method: 'GET' });
+	},
+	async searchStudentAccounts(query, program, studentBatchName) {
+		return call(
+			'edupro_financials.receipting.search_student_accounts',
+			{ query, program, student_batch_name: studentBatchName },
+			{ method: 'GET' }
+		);
+	},
+	async getStudentAccount(student) {
+		return call('edupro_financials.receipting.get_student_account', { student }, { method: 'GET' });
+	},
+	async receiptPayment(student, tenderAmount, modeOfPayment, referenceNo, terminal) {
+		return call('edupro_financials.receipting.receipt_payment', {
+			student,
+			tender_amount: tenderAmount,
+			mode_of_payment: modeOfPayment,
+			reference_no: referenceNo,
+			terminal,
+		});
 	},
 };
 

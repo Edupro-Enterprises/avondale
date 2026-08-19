@@ -35,6 +35,7 @@ services:
       - SHELL=/bin/bash
     volumes:
       - bench-data:/home/frappe
+      - ../edupro_financials:/home/frappe/edupro_financials-src
     ports:
       - "8000:8000"
       - "9000-9010:9000-9010"

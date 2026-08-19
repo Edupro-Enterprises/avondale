@@ -25,7 +25,9 @@ def after_install():
 	create_vote_book_custom_fields()
 	create_receipt_custom_fields()
 	create_fees_fund_field()
+	create_fee_structure_income_account_field()
 	create_migration_custom_fields()
+	create_student_profile_fields()
 	create_portal_role_permissions()
 	create_voucher_custom_fields()
 	configure_print_settings()
@@ -38,6 +40,9 @@ def after_install():
 	create_sales_invoice_custom_fields()
 	grant_bursar_igp_permissions()
 	grant_bursar_exemption_permissions()
+	create_receipting_accounts_and_modes()
+	create_payment_entry_custom_fields()
+	grant_bursar_payment_permissions()
 	frappe.db.commit()
 
 
@@ -196,6 +201,72 @@ def create_migration_custom_fields():
 	)
 
 
+def create_student_profile_fields():
+	"""The Education app's Student doctype already covers photo, DOB,
+	address, and parent/guardian details (via the Guardian doctype) - these
+	four fields are what's genuinely missing for the portal's Student
+	Profile page: quick-reference health/emergency info and free-text
+	sports/academic notes. Deliberately plain Small Text, not a structured
+	child table - the spec only calls for "for now, N/A + editable", not a
+	full records system."""
+	from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
+
+	create_custom_fields(
+		{
+			"Student": [
+				{
+					"fieldname": "health_tab",
+					"label": "Health & Activities",
+					"fieldtype": "Tab Break",
+					"insert_after": "connections_tab",
+				},
+				{
+					"fieldname": "emergency_contact_name",
+					"label": "Emergency Contact Name",
+					"fieldtype": "Data",
+					"insert_after": "health_tab",
+				},
+				{
+					"fieldname": "emergency_contact_phone",
+					"label": "Emergency Contact Phone",
+					"fieldtype": "Data",
+					"insert_after": "emergency_contact_name",
+				},
+				{
+					"fieldname": "column_break_health",
+					"fieldtype": "Column Break",
+					"insert_after": "emergency_contact_phone",
+				},
+				{
+					"fieldname": "allergies",
+					"label": "Allergies",
+					"fieldtype": "Small Text",
+					"insert_after": "column_break_health",
+				},
+				{
+					"fieldname": "medical_conditions",
+					"label": "Medical Conditions",
+					"fieldtype": "Small Text",
+					"insert_after": "allergies",
+				},
+				{
+					"fieldname": "sports_and_clubs",
+					"label": "Sports & Clubs",
+					"fieldtype": "Small Text",
+					"insert_after": "medical_conditions",
+				},
+				{
+					"fieldname": "academic_notes",
+					"label": "Academic Notes",
+					"fieldtype": "Small Text",
+					"insert_after": "sports_and_clubs",
+				},
+			],
+		},
+		ignore_validate=True,
+	)
+
+
 def create_fees_fund_field():
 	"""The Fund Accounting Dimension auto-installs on Fee Structure and Fee
 	Schedule (both are in ERPNext's dimension-enabled doctype list) but NOT
@@ -217,6 +288,33 @@ def create_fees_fund_field():
 					"options": "Fund",
 					"fetch_from": "fee_structure.fund",
 					"insert_after": "cost_center",
+				},
+			]
+		},
+		ignore_validate=True,
+	)
+
+
+def create_fee_structure_income_account_field():
+	"""Fees.income_account (a stock Education-app field) has
+	fetch_from="fee_structure.income_account" - but this build of the
+	Education app (version-15.2) never actually put that field on Fee
+	Structure. Left unfixed, *every* Fees insert fails outright: link
+	validation SELECTs income_account from `tabFee Structure` and MariaDB
+	throws "Unknown column" since the column doesn't exist. Add it as a
+	custom field so the fetch_from has something real to read.
+	"""
+	from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
+
+	create_custom_fields(
+		{
+			"Fee Structure": [
+				{
+					"fieldname": "income_account",
+					"label": "Income Account",
+					"fieldtype": "Link",
+					"options": "Account",
+					"insert_after": "receivable_account",
 				},
 			]
 		},
@@ -354,6 +452,8 @@ def create_procurement_item():
 			"item_name": PROCUREMENT_ITEM_CODE,
 			"item_group": item_group,
 			"is_stock_item": 0,
+			"stock_uom": "Nos",
+			"uoms": [{"uom": "Nos", "conversion_factor": 1}],
 			"include_item_in_manufacturing": 0,
 			"is_purchase_item": 1,
 		}
@@ -483,6 +583,8 @@ def create_igp_items():
 				"item_name": item_code,
 				"item_group": item_group,
 				"is_stock_item": 0,
+				"stock_uom": "Nos",
+				"uoms": [{"uom": "Nos", "conversion_factor": 1}],
 				"is_sales_item": 1,
 				"include_item_in_manufacturing": 0,
 				"item_defaults": [{"company": company, "income_account": account_name}],
@@ -576,3 +678,127 @@ def grant_bursar_exemption_permissions():
 			update_permission_property(doctype, role, 0, ptype, 1)
 
 	grant("Student Exemption and Discount", "Bursar", ["read", "write", "create", "submit"])
+
+
+def create_receipting_accounts_and_modes():
+	"""Counter receipting needs somewhere to post each tender type. Only one
+	postable cash account existed before this (Cash - APS, USD) - Bank
+	Accounts and Cash In Hand were both left as empty group accounts by the
+	standard Chart of Accounts template, and no ZiG-denominated account
+	existed at all (which also meant revaluation.py's ZiG revaluation could
+	never find anything to revalue)."""
+	company = frappe.db.get_single_value("Global Defaults", "default_company")
+
+	if not frappe.db.exists("Account", "Bank - APS"):
+		frappe.get_doc(
+			{
+				"doctype": "Account",
+				"account_name": "Bank",
+				"parent_account": "Bank Accounts - APS",
+				"company": company,
+				"is_group": 0,
+				"root_type": "Asset",
+				"account_type": "Bank",
+				"account_currency": "USD",
+			}
+		).insert(ignore_permissions=True)
+
+	if not frappe.db.exists("Account", "Cash ZiG - APS"):
+		frappe.get_doc(
+			{
+				"doctype": "Account",
+				"account_name": "Cash ZiG",
+				"parent_account": "Cash In Hand - APS",
+				"company": company,
+				"is_group": 0,
+				"root_type": "Asset",
+				"account_type": "Cash",
+				"account_currency": "ZiG",
+			}
+		).insert(ignore_permissions=True)
+
+	# (mode name, default account, existing-mode-to-configure-if-already-present)
+	modes = [
+		("Cash (ZiG)", "Cash ZiG - APS"),
+		("EcoCash", "Bank - APS"),
+		("ZIPIT", "Bank - APS"),
+		("POS Swipe", "Bank - APS"),
+	]
+	for mode_name, account in modes:
+		if not frappe.db.exists("Mode of Payment", mode_name):
+			frappe.get_doc(
+				{
+					"doctype": "Mode of Payment",
+					"mode_of_payment": mode_name,
+					"type": "General",
+					"accounts": [{"company": company, "default_account": account}],
+				}
+			).insert(ignore_permissions=True)
+
+	# Bank Transfer reuses the stock "Wire Transfer" mode rather than adding
+	# a near-duplicate - just give it a default account, since none of the
+	# stock modes had one configured.
+	if frappe.db.exists("Mode of Payment", "Wire Transfer"):
+		wire = frappe.get_doc("Mode of Payment", "Wire Transfer")
+		if not any(a.company == company for a in wire.accounts):
+			wire.append("accounts", {"company": company, "default_account": "Bank - APS"})
+			wire.save(ignore_permissions=True)
+
+
+def create_payment_entry_custom_fields():
+	"""Same receipt_no/terminal pair Fees and Sales Invoice carry - see
+	receipts.py:assign_receipt_number_to_payment. Payment Entry is where
+	receipt numbering actually belongs for the bill-now-pay-later flow: a
+	Fees record's own on_submit fires at *billing* time, when nothing has
+	been paid yet (outstanding always equals grand_total then), so that
+	hook can never meaningfully fire for a payment collected later.
+	"""
+	from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
+
+	create_custom_fields(
+		{
+			"Payment Entry": [
+				{
+					"fieldname": "receipt_no",
+					"label": "Receipt No",
+					"fieldtype": "Data",
+					"read_only": 1,
+					"in_list_view": 1,
+					"in_standard_filter": 1,
+					"insert_after": "reference_no",
+					"allow_on_submit": 1,
+				},
+				{
+					"fieldname": "terminal",
+					"label": "Terminal",
+					"fieldtype": "Data",
+					"default": "HAR",
+					"insert_after": "receipt_no",
+				},
+				{
+					"fieldname": "cancellation_reason",
+					"label": "Cancellation / Credit Note Reason",
+					"fieldtype": "Small Text",
+					"insert_after": "terminal",
+					"description": "Required before this payment receipt can be cancelled - see credit_notes.py.",
+				},
+			]
+		},
+		ignore_validate=True,
+	)
+
+
+def grant_bursar_payment_permissions():
+	from frappe.permissions import add_permission, update_permission_property
+
+	def grant(doctype, role, ptypes):
+		first, rest = ptypes[0], ptypes[1:]
+		if not frappe.db.exists("Custom DocPerm", {"parent": doctype, "role": role, "permlevel": 0}):
+			add_permission(doctype, role, permlevel=0, ptype=first)
+		else:
+			update_permission_property(doctype, role, 0, first, 1)
+		for ptype in rest:
+			update_permission_property(doctype, role, 0, ptype, 1)
+
+	grant("Payment Entry", "Bursar", ["read", "write", "create", "submit", "cancel"])
+	grant("Currency Exchange", "Bursar", ["read", "write", "create"])

@@ -46,6 +46,7 @@ def get_form_options():
 
 @frappe.whitelist()
 def create_supplier(supplier_name):
+	frappe.only_for("Bursar")
 	supplier_name = (supplier_name or "").strip()
 	if not supplier_name:
 		frappe.throw(_("Supplier name is required."))
@@ -108,6 +109,7 @@ def create_requisition(supplier, fiscal_year, schedule_date, items):
 	that would overrun its Vote-Book balance is rejected right here, at
 	drafting time, not silently allowed through until someone tries to
 	submit it later."""
+	frappe.only_for("Bursar")
 	if isinstance(items, str):
 		items = json.loads(items)
 	if not items:
@@ -158,6 +160,7 @@ def attach_procurement_files(purchase_order, quotations_attached=None, comparati
 	actually been uploaded (see api.uploadProcurementFile on the frontend,
 	which calls Frappe's own /api/method/upload_file against this same
 	document first)."""
+	frappe.only_for("Bursar")
 	doc = frappe.get_doc("Purchase Order", purchase_order)
 	if doc.docstatus == 2:
 		frappe.throw(_("Cannot attach files to a cancelled requisition."))
@@ -178,6 +181,7 @@ def attach_procurement_files(purchase_order, quotations_attached=None, comparati
 
 @frappe.whitelist()
 def submit_requisition(purchase_order):
+	frappe.only_for("Bursar")
 	doc = frappe.get_doc("Purchase Order", purchase_order)
 	doc.submit()
 	frappe.db.commit()

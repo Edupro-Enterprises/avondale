@@ -1,0 +1,1 @@
+exec(open('/home/frappe/frappe-bench/check_fee_structure.py').read(), globals())

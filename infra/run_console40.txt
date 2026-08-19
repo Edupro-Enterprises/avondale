@@ -1,0 +1,1 @@
+exec(open('/home/frappe/frappe-bench/apply_income_account_fix.py').read(), globals())

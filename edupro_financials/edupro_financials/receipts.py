@@ -34,6 +34,22 @@ def assign_receipt_number(doc, method):
 	doc.db_set("receipt_no", receipt_no, update_modified=False)
 
 
+def assign_receipt_number_to_payment(doc, method):
+	"""Every submitted Receive-type Payment Entry represents real money
+	collected right now - unlike Fees.on_submit (fires at *billing* time,
+	before anything's paid) this fires at the actual moment of receipting,
+	so unconditionally numbers every one rather than checking outstanding
+	vs grand_total first."""
+	if doc.get("receipt_no") or doc.payment_type != "Receive":
+		return
+
+	terminal = (doc.get("terminal") or "HAR").upper()
+	year = getdate(doc.posting_date).year
+
+	receipt_no = make_autoname(f"REC-{terminal}-{year}-.#####")
+	doc.db_set("receipt_no", receipt_no, update_modified=False)
+
+
 def attach_combined_fee_context(doc, method, print_settings=None):
 	"""A student's term bill is deliberately split across two Fees records
 	(Levy on the SDC/SDA fund, Tuition on the Tuition/Government fund) so
@@ -75,16 +91,31 @@ def attach_combined_fee_context(doc, method, print_settings=None):
 	doc.combined_outstanding_formatted = fmt_money(combined_outstanding, currency=doc.currency)
 
 
-def get_receipt_sequence_gaps(doctype="Fees"):
+def get_receipt_sequence_gaps(doctypes=("Fees", "Sales Invoice", "Payment Entry")):
 	"""Return missing receipt numbers per terminal/year - any gap means a
 	receipt was skipped, deleted outside the app, or renumbered - all of
-	which should raise an Auditor Alert per spec section 5.3."""
+	which should raise an Auditor Alert per spec section 5.3.
 
-	rows = frappe.get_all(
-		doctype,
-		filters={"receipt_no": ["like", "REC-%"]},
-		fields=["name", "receipt_no"],
-	)
+	The REC-{terminal}-{year}-{seq} counter is a single global sequence
+	(Frappe's autoname series counter is keyed by the naming template, not
+	scoped per doctype) shared across every doctype that calls
+	assign_receipt_number* - Fees and Sales Invoice for atomic POS-style
+	sales, Payment Entry for fees paid after the fact. Checking any one
+	doctype's numbers in isolation would misreport numbers legitimately
+	used by another as "gaps" - all three have to be combined first.
+	"""
+	if isinstance(doctypes, str):
+		doctypes = (doctypes,)
+
+	rows = []
+	for doctype in doctypes:
+		rows.extend(
+			frappe.get_all(
+				doctype,
+				filters={"receipt_no": ["like", "REC-%"]},
+				fields=["name", "receipt_no"],
+			)
+		)
 
 	by_bucket = {}
 	for row in rows:

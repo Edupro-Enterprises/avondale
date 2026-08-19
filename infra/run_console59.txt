@@ -1,0 +1,1 @@
+exec(open('/home/frappe/frappe-bench/apply_student_profile_fields.py').read(), globals())

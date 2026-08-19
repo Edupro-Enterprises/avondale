@@ -1,0 +1,114 @@
+---
+const path = Astro.url.pathname;
+const isActive = (href: string) => path === href || path.startsWith(href);
+
+const NAV = [
+	{
+		id: 'nav-receipting',
+		href: '/receipting/',
+		label: 'Fee Receipting',
+		icon: '<rect x="4" y="3" width="16" height="18" rx="1"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><path d="M9 16h2"/>',
+	},
+	{
+		id: 'nav-fees',
+		href: '/fees/',
+		label: 'Student Fees',
+		icon: '<rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>',
+	},
+	{
+		id: 'nav-procurement',
+		href: '/procurement/',
+		label: 'Requisitions',
+		icon: '<rect x="5" y="4" width="14" height="18" rx="2"/><path d="M9 4h6a1 1 0 0 1 1 1v1H8V5a1 1 0 0 1 1-1Z"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/>',
+	},
+	{
+		id: 'nav-igp',
+		href: '/igp/',
+		label: 'IGP Sales',
+		icon: '<path d="M6 8h12l1 12H5L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
+	},
+	{
+		id: 'nav-exemptions',
+		href: '/exemptions/',
+		label: 'Exemptions',
+		icon: '<path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6l7-3Z"/><path d="M9 12l2 2 4-4"/>',
+	},
+	{
+		id: 'nav-reports',
+		href: '/reports/',
+		label: 'Financial Statements',
+		icon: '<line x1="4" y1="20" x2="20" y2="20"/><rect x="6" y="12" width="3" height="6"/><rect x="11" y="8" width="3" height="10"/><rect x="16" y="4" width="3" height="14"/>',
+	},
+];
+---
+
+<aside class="sidebar">
+	<a class="sidebar-brand" href="/" aria-label="Edupro — Home">
+		<img src="/logo.png" alt="Edupro" width="112" height="24" />
+	</a>
+
+	<span class="sidebar-role badge-soft badge" id="role-badge" style="display:none;"></span>
+
+	<nav class="sidebar-nav">
+		{
+			NAV.map((item) => (
+				<a
+					href={item.href}
+					id={item.id}
+					class={`sidebar-link${isActive(item.href) ? ' is-active' : ''}`}
+					style="display:none;"
+				>
+					<span class="sidebar-icon" set:html={`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${item.icon}</svg>`} />
+					<span>{item.label}</span>
+				</a>
+			))
+		}
+	</nav>
+
+	<div class="sidebar-spacer" />
+
+	<div class="sidebar-user">
+		<span class="name" id="user-name" />
+		<button class="btn-logout" id="logout-btn" type="button">Log out</button>
+	</div>
+</aside>
+
+<script>
+	import { api } from '../lib/api.js';
+
+	async function init() {
+		try {
+			const session = await api.getSession();
+			const nameEl = document.getElementById('user-name');
+			const roleEl = document.getElementById('role-badge');
+			if (nameEl) nameEl.textContent = session.full_name;
+			if (roleEl && session.primary_role) {
+				roleEl.textContent = session.primary_role;
+				roleEl.style.display = '';
+			}
+			const reportsLink = document.getElementById('nav-reports');
+			const feesLink = document.getElementById('nav-fees');
+			const procurementLink = document.getElementById('nav-procurement');
+			const igpLink = document.getElementById('nav-igp');
+			const exemptionsLink = document.getElementById('nav-exemptions');
+			const reportRoles = ['Headmaster', 'Bursar', 'SDC Chairperson', 'Deputy Head'];
+			[reportsLink, feesLink, procurementLink, igpLink, exemptionsLink].forEach((link) => {
+				if (link && reportRoles.includes(session.primary_role)) link.style.display = '';
+			});
+
+			const receiptingLink = document.getElementById('nav-receipting');
+			if (receiptingLink && session.primary_role === 'Bursar') receiptingLink.style.display = '';
+		} catch (e) {
+			window.location.href = '/login';
+		}
+	}
+	init();
+
+	document.getElementById('logout-btn')?.addEventListener('click', async () => {
+		try {
+			await api.logout();
+		} finally {
+			window.location.href = '/login';
+		}
+	});
+</script>

@@ -53,6 +53,7 @@ def create_exemption(
 	amount_covered=0,
 	submit=1,
 ):
+	frappe.only_for("Bursar")
 	if not supporting_document:
 		frappe.throw(_("Supporting document is required before this record can be saved."))
 

@@ -1,0 +1,1 @@
+exec(open('/home/frappe/frappe-bench/check_fiscal_year.py').read(), globals())

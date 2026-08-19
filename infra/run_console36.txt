@@ -1,0 +1,1 @@
+exec(open('/home/frappe/frappe-bench/check_student_fields.py').read(), globals())

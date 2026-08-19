@@ -1,0 +1,1 @@
+exec(open('/home/frappe/frappe-bench/check_currency_bug2.py').read(), globals())

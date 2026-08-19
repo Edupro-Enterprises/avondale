@@ -1,0 +1,1 @@
+exec(open('/home/frappe/frappe-bench/check_price_list.py').read(), globals())

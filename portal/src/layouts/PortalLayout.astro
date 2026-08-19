@@ -1,6 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
-import PortalHeader from '../components/PortalHeader.astro';
+import PortalSidebar from '../components/PortalSidebar.astro';
 import Footer from '../components/Footer.astro';
 
 interface Props {
@@ -11,12 +11,14 @@ const { title } = Astro.props;
 
 <BaseLayout title={title}>
 	<div class="page-shell">
-		<PortalHeader />
-		<main class="portal-main">
-			<div class="wrap">
-				<slot />
-			</div>
-		</main>
-		<Footer />
+		<PortalSidebar />
+		<div class="content-column">
+			<main class="portal-main">
+				<div class="wrap">
+					<slot />
+				</div>
+			</main>
+			<Footer />
+		</div>
 	</div>
 </BaseLayout>

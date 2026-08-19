@@ -15,6 +15,12 @@ edupro_financials/**/*.pyo
 # Docker/infra secrets - never commit real credentials
 infra/.env
 
+# Real pupil/financial data pulled from Pastel (or any other source) for
+# import into the live system - never belongs in git, per this repo's
+# no-student-data policy.
+infra/import/*
+!infra/import/.gitkeep
+
 # OS / editor cruft
 .DS_Store
 Thumbs.db

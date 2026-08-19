@@ -9,7 +9,7 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
 	</div>
 
 	<!-- Only rendered when printing (see @media print in global.css) - the
-	     on-screen masthead/footer are hidden then, so the printed page/PDF
+	     on-screen sidebar/footer are hidden then, so the printed page/PDF
 	     still needs its own letterhead. -->
 	<div class="print-letterhead">
 		<img src="/avondale-crest.png" alt="Avondale Primary School" />
@@ -25,6 +25,9 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
 		<button class="report-tab is-active" data-tab="notes">Notes to the Financial Statements</button>
 		<button class="report-tab" data-tab="performance">Statement of Financial Performance</button>
 		<button class="report-tab" data-tab="position">Statement of Financial Position</button>
+		<button class="report-tab" data-tab="trial-balance">Trial Balance</button>
+		<button class="report-tab" data-tab="net-assets">Statement of Changes in Net Assets</button>
+		<button class="report-tab" data-tab="cash-flow">Cash Flow Statement</button>
 		<button class="report-tab" data-tab="votebook">Vote-Book Variance</button>
 		<button class="report-tab" data-tab="arrears">Fee Arrears Aging</button>
 		<button class="btn btn-secondary btn-print" id="print-btn" style="margin-left:auto;">🖨 Print / Save as PDF</button>
@@ -87,6 +90,50 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
 		</div>
 		<div class="card card-tight" style="overflow-x:auto;">
 			<table class="portal-table" id="pos-table">
+				<thead></thead>
+				<tbody></tbody>
+			</table>
+		</div>
+	</div>
+
+	<!-- TRIAL BALANCE -->
+	<div class="report-pane" id="pane-trial-balance">
+		<div class="report-filters">
+			<label>As on <input type="date" id="tb-date" /></label>
+			<button class="btn btn-secondary" id="tb-run">Run</button>
+		</div>
+		<div class="card card-tight" style="overflow-x:auto;">
+			<table class="portal-table" id="tb-table">
+				<thead></thead>
+				<tbody></tbody>
+			</table>
+		</div>
+	</div>
+
+	<!-- STATEMENT OF CHANGES IN NET ASSETS -->
+	<div class="report-pane" id="pane-net-assets">
+		<div class="report-filters">
+			<label>From <input type="date" id="na-from" /></label>
+			<label>To <input type="date" id="na-to" /></label>
+			<button class="btn btn-secondary" id="na-run">Run</button>
+		</div>
+		<div class="card card-tight" style="overflow-x:auto;">
+			<table class="portal-table" id="na-table">
+				<thead></thead>
+				<tbody></tbody>
+			</table>
+		</div>
+	</div>
+
+	<!-- CASH FLOW STATEMENT -->
+	<div class="report-pane" id="pane-cash-flow">
+		<div class="report-filters">
+			<label>From <input type="date" id="cf-from" /></label>
+			<label>To <input type="date" id="cf-to" /></label>
+			<button class="btn btn-secondary" id="cf-run">Run</button>
+		</div>
+		<div class="card card-tight" style="overflow-x:auto;">
+			<table class="portal-table" id="cf-table">
 				<thead></thead>
 				<tbody></tbody>
 			</table>
@@ -270,6 +317,43 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
 		};
 		document.getElementById('pos-run').addEventListener('click', loaders.position);
 
+		// ---- Trial Balance ----
+		loaders['trial-balance'] = async () => {
+			const as_on_date = document.getElementById('tb-date').value;
+			const r = await api.getStatutoryReport('trial_balance', { as_on_date, company: defaults.company });
+			renderGenericTable('tb-table', r.columns, r.data, { totalRowMatch: 'Total' });
+		};
+		document.getElementById('tb-run').addEventListener('click', loaders['trial-balance']);
+
+		// ---- Statement of Changes in Net Assets ----
+		loaders['net-assets'] = async () => {
+			const from_date = document.getElementById('na-from').value;
+			const to_date = document.getElementById('na-to').value;
+			const r = await api.getStatutoryReport('statement_of_changes_in_net_assets', {
+				from_date,
+				to_date,
+				company: defaults.company,
+			});
+			renderGenericTable('na-table', r.columns, r.data, { checkRowMatch: 'Closing Balance' });
+		};
+		document.getElementById('na-run').addEventListener('click', loaders['net-assets']);
+
+		// ---- Cash Flow Statement ----
+		loaders['cash-flow'] = async () => {
+			const from_date = document.getElementById('cf-from').value;
+			const to_date = document.getElementById('cf-to').value;
+			const r = await api.getStatutoryReport('cash_flow_statement', {
+				from_date,
+				to_date,
+				company: defaults.company,
+			});
+			renderGenericTable('cf-table', r.columns, r.data, {
+				totalRowMatch: 'Net Cash from',
+				checkRowMatch: 'Cash at End of Period',
+			});
+		};
+		document.getElementById('cf-run').addEventListener('click', loaders['cash-flow']);
+
 		// ---- Vote Book ----
 		loaders.votebook = async () => {
 			const r = await api.getStatutoryReport('vote_book_variance', {});
@@ -312,6 +396,9 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
 			notes: 'Notes to the Financial Statements',
 			performance: 'Statement of Financial Performance',
 			position: 'Statement of Financial Position',
+			'trial-balance': 'Trial Balance',
+			'net-assets': 'Statement of Changes in Net Assets',
+			'cash-flow': 'Cash Flow Statement',
 			votebook: 'Vote-Book Variance Statement',
 			arrears: 'Age-Analyzed Fee Arrears Schedule',
 		};
@@ -325,6 +412,13 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
 				return `${document.getElementById('perf-from').value} to ${document.getElementById('perf-to').value}`;
 			}
 			if (key === 'position') return `As on ${document.getElementById('pos-date').value}`;
+			if (key === 'trial-balance') return `As on ${document.getElementById('tb-date').value}`;
+			if (key === 'net-assets') {
+				return `${document.getElementById('na-from').value} to ${document.getElementById('na-to').value}`;
+			}
+			if (key === 'cash-flow') {
+				return `${document.getElementById('cf-from').value} to ${document.getElementById('cf-to').value}`;
+			}
 			if (key === 'arrears') return `As on ${document.getElementById('arrears-date').value}`;
 			return `As on ${new Date().toISOString().slice(0, 10)}`;
 		}
@@ -343,6 +437,11 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
 		document.getElementById('perf-from').value = `${new Date().getFullYear()}-01-01`;
 		document.getElementById('perf-to').value = defaults.as_on_date;
 		document.getElementById('pos-date').value = defaults.as_on_date;
+		document.getElementById('tb-date').value = defaults.as_on_date;
+		document.getElementById('na-from').value = `${new Date().getFullYear()}-01-01`;
+		document.getElementById('na-to').value = defaults.as_on_date;
+		document.getElementById('cf-from').value = `${new Date().getFullYear()}-01-01`;
+		document.getElementById('cf-to').value = defaults.as_on_date;
 		document.getElementById('arrears-date').value = defaults.as_on_date;
 		await loadArrearsFilterOptions();
 

@@ -15,12 +15,19 @@ import frappe
 from edupro_financials.edupro_financials.report.age_analyzed_fee_arrears_schedule import (
 	age_analyzed_fee_arrears_schedule as _fee_arrears,
 )
+from edupro_financials.edupro_financials.report.cash_flow_statement import (
+	cash_flow_statement as _cash_flow_statement,
+)
 from edupro_financials.edupro_financials.report.mopse_statement_of_financial_performance import (
 	mopse_statement_of_financial_performance as _mopse_performance,
 )
 from edupro_financials.edupro_financials.report.mopse_statement_of_financial_position import (
 	mopse_statement_of_financial_position as _mopse_position,
 )
+from edupro_financials.edupro_financials.report.statement_of_changes_in_net_assets import (
+	statement_of_changes_in_net_assets as _net_assets,
+)
+from edupro_financials.edupro_financials.report.trial_balance import trial_balance as _trial_balance
 from edupro_financials.edupro_financials.report.vote_book_variance_statement import (
 	vote_book_variance_statement as _vote_book_variance,
 )
@@ -30,6 +37,9 @@ REPORTS = {
 	"mopse_financial_performance": _mopse_performance,
 	"mopse_financial_position": _mopse_position,
 	"vote_book_variance": _vote_book_variance,
+	"trial_balance": _trial_balance,
+	"cash_flow_statement": _cash_flow_statement,
+	"statement_of_changes_in_net_assets": _net_assets,
 }
 
 

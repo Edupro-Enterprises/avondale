@@ -266,4 +266,8 @@ doc_events = {
 	"Sales Invoice": {
 		"on_submit": "edupro_financials.receipts.assign_receipt_number",
 	},
+	"Payment Entry": {
+		"on_submit": "edupro_financials.receipts.assign_receipt_number_to_payment",
+		"before_cancel": "edupro_financials.credit_notes.require_cancellation_reason",
+	},
 }

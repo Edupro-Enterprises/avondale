@@ -23,8 +23,14 @@ def get_summary():
 
 
 def get_total_arrears():
+	# Gross, not net: a credit balance on one student's account is that
+	# student's money, not an offset against what a *different* student
+	# owes - summing every record regardless of sign would let credits
+	# silently hide real arrears in the headline number. Matches the
+	# same outstanding_amount > 0 filter age_analyzed_fee_arrears_schedule
+	# uses.
 	total = frappe.db.sql(
-		"select coalesce(sum(outstanding_amount), 0) from `tabFees` where docstatus = 1"
+		"select coalesce(sum(outstanding_amount), 0) from `tabFees` where docstatus = 1 and outstanding_amount > 0"
 	)[0][0]
 	return flt(total)
 
@@ -33,12 +39,13 @@ def get_arrears_by_fee_category():
 	"""Outstanding balances split by fund - Levy sits on the SDC/SDA fund,
 	Tuition on the Tuition/Government fund, so this is the same split the
 	spec calls "Levy and Tuition fees (SDC and Tuition)", just read off the
-	fund each Fees record already carries rather than re-deriving it."""
+	fund each Fees record already carries rather than re-deriving it.
+	Gross like get_total_arrears() above - see that comment."""
 	rows = frappe.db.sql(
 		"""
 		select coalesce(fund, %(unassigned)s) as fund, coalesce(sum(outstanding_amount), 0) as amount
 		from `tabFees`
-		where docstatus = 1
+		where docstatus = 1 and outstanding_amount > 0
 		group by coalesce(fund, %(unassigned)s)
 		""",
 		{"unassigned": UNASSIGNED},

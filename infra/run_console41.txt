@@ -1,0 +1,1 @@
+exec(open('/home/frappe/frappe-bench/verify_fixes.py').read(), globals())

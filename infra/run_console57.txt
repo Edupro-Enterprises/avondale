@@ -1,0 +1,1 @@
+exec(open('/home/frappe/frappe-bench/verify_grade2_removed.py').read(), globals())

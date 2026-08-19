@@ -1,0 +1,1 @@
+exec(open('/home/frappe/frappe-bench/verify_profile_fields.py').read(), globals())

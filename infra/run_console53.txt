@@ -1,0 +1,1 @@
+exec(open('/home/frappe/frappe-bench/get_grade2_fs.py').read(), globals())

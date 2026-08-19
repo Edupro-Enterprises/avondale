@@ -1,0 +1,1 @@
+exec(open('/home/frappe/frappe-bench/bill_term1_term2.py').read(), globals())

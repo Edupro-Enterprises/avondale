@@ -1,0 +1,1 @@
+exec(open('/home/frappe/frappe-bench/test_exchange_rate.py').read(), globals())

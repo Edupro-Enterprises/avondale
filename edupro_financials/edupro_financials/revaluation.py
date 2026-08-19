@@ -19,6 +19,7 @@ EXCHANGE_GAIN_LOSS_ACCOUNT = "Exchange Gain/Loss - APS"
 def revalue_zig_accounts(new_rate, posting_date=None):
 	"""new_rate is expressed as USD per 1 ZiG (matching the convention used
 	throughout the system: exchange_rate * zig_amount = usd_amount)."""
+	frappe.only_for("Bursar")
 	new_rate = flt(new_rate)
 	if new_rate <= 0:
 		frappe.throw(_("Exchange rate must be a positive number."))

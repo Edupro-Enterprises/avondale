@@ -1,0 +1,1 @@
+exec(open('/home/frappe/frappe-bench/setup_fees_classes.py').read(), globals())

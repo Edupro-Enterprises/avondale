@@ -27,6 +27,7 @@ def get_form_options():
 
 @frappe.whitelist()
 def create_sale(item_code, description, amount, mode_of_payment, terminal="HAR"):
+	frappe.only_for("Bursar")
 	amount = flt(amount)
 	if amount <= 0:
 		frappe.throw(_("Amount must be greater than zero."))

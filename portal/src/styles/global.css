@@ -80,14 +80,17 @@
    RESET / BASE
    ========================================================================== */
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+/* Root font-size drives every `rem` value in this file - dropping it here
+   is a deliberate, app-wide density pass (more rows/cards visible per
+   screen) rather than a one-off body override. */
+html { scroll-behavior: smooth; font-size: 14px; }
 body {
 	margin: 0;
 	background: var(--paper-sunk);
 	color: var(--ink);
 	font-family: var(--font-body);
-	font-size: 16px;
-	line-height: 1.55;
+	font-size: 1rem;
+	line-height: 1.45;
 	-webkit-font-smoothing: antialiased;
 }
 img, svg { max-width: 100%; display: block; }
@@ -100,26 +103,46 @@ button, input, select { font-family: inherit; font-size: inherit; }
 :focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 
-.wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+.wrap { max-width: 1320px; margin: 0 auto; padding: 0 20px; }
 .wrap-narrow { max-width: 640px; margin: 0 auto; padding: 0 24px; }
 .hairline { border: none; border-top: 1px solid var(--line); margin: 0; }
-
-/* ==========================================================================
-   MASTHEAD (portal — signed-in chrome, not a marketing nav)
-   ========================================================================== */
-.masthead { background: var(--paper-raised); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
-.masthead .wrap { display: flex; align-items: center; gap: 24px; height: 76px; }
 .brand { flex-shrink: 0; display: flex; align-items: center; }
 .brand img { height: 40px; width: auto; }
 
-.masthead-role { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); background: var(--paper-sunk); border: 1px solid var(--line); padding: 4px 10px; border-radius: 999px; }
-.masthead-spacer { flex: 1; }
-.masthead-nav { display: flex; align-items: center; gap: 18px; margin-right: 18px; }
-.masthead-nav a { font-family: var(--font-display); font-weight: 700; font-size: 0.85rem; color: var(--ink); text-decoration: none; }
-.masthead-nav a:hover { color: var(--red); }
-.masthead-user { display: flex; align-items: center; gap: 14px; }
-.masthead-user .name { font-weight: 700; font-size: 0.92rem; }
-.btn-logout { font-family: var(--font-display); font-weight: 700; font-size: 0.82rem; color: var(--ink-soft); border: 1px solid var(--line); padding: 8px 14px; border-radius: 4px; background: none; cursor: pointer; }
+/* ==========================================================================
+   SIDEBAR (portal — signed-in chrome, not a marketing nav)
+   ========================================================================== */
+.sidebar {
+	background: var(--paper-raised);
+	border-right: 1px solid var(--line);
+	width: 206px;
+	flex-shrink: 0;
+	display: flex;
+	flex-direction: column;
+	position: sticky;
+	top: 0;
+	align-self: flex-start;
+	height: 100vh;
+	padding: 16px 12px;
+	gap: 4px;
+}
+.sidebar-brand { display: flex; align-items: center; padding: 4px 8px 12px; }
+.sidebar-brand img { height: 26px; width: auto; }
+.sidebar-role { align-self: flex-start; margin: 0 6px 12px; }
+.sidebar-nav { display: flex; flex-direction: column; gap: 2px; }
+.sidebar-link {
+	display: flex; align-items: center; gap: 10px;
+	font-family: var(--font-display); font-weight: 700; font-size: 0.8rem;
+	color: var(--ink-soft); padding: 9px 10px; border-radius: 6px;
+}
+.sidebar-link:hover { background: var(--paper-sunk); color: var(--ink); }
+.sidebar-link.is-active { background: var(--red-tint); color: var(--red-ink); }
+.sidebar-icon { display: flex; flex-shrink: 0; width: 17px; height: 17px; }
+.sidebar-icon svg { width: 100%; height: 100%; }
+.sidebar-spacer { flex: 1; }
+.sidebar-user { display: flex; flex-direction: column; gap: 10px; padding: 10px 6px 2px; border-top: 1px solid var(--line); }
+.sidebar-user .name { font-weight: 700; font-size: 0.82rem; }
+.btn-logout { font-family: var(--font-display); font-weight: 700; font-size: 0.78rem; color: var(--ink-soft); border: 1px solid var(--line); padding: 7px 12px; border-radius: 4px; background: none; cursor: pointer; width: 100%; }
 .btn-logout:hover { border-color: var(--red); color: var(--red); }
 
 /* ==========================================================================
@@ -149,12 +172,12 @@ input:focus, select:focus { border-color: var(--red); }
 /* ==========================================================================
    CARDS / STATS
    ========================================================================== */
-.card { background: var(--paper-raised); border: 1px solid var(--line); border-radius: 6px; padding: 24px; }
-.card-tight { padding: 18px 20px; }
+.card { background: var(--paper-raised); border: 1px solid var(--line); border-radius: 6px; padding: 18px 20px; }
+.card-tight { padding: 14px 16px; }
 
-.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; }
-.stat-card { background: var(--paper-raised); border: 1px solid var(--line); border-radius: 6px; padding: 18px; text-align: center; }
-.stat-card .value { font-family: var(--font-mono); font-size: 1.7rem; font-weight: 500; margin: 4px 0; }
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.stat-card { background: var(--paper-raised); border: 1px solid var(--line); border-radius: 6px; padding: 14px; text-align: center; }
+.stat-card .value { font-family: var(--font-mono); font-size: 1.55rem; font-weight: 500; margin: 4px 0; }
 .stat-card .label { font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); }
 .stat-card.is-alert .value { color: var(--red); }
 .stat-card.is-ok .value { color: var(--green); }
@@ -178,9 +201,9 @@ input:focus, select:focus { border-color: var(--red); }
 /* ==========================================================================
    TABLES
    ========================================================================== */
-table.portal-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
-table.portal-table th { text-align: left; font-family: var(--font-mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); border-bottom: 2px solid var(--ink); padding: 8px 10px; }
-table.portal-table td { padding: 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.portal-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+table.portal-table th { text-align: left; font-family: var(--font-mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); border-bottom: 2px solid var(--ink); padding: 6px 8px; }
+table.portal-table td { padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
 table.portal-table tr:last-child td { border-bottom: none; }
 table.portal-table tr.is-total td { font-weight: 700; border-top: 2px solid var(--ink); border-bottom: none; }
 table.portal-table tr.is-check td { font-weight: 700; background: var(--paper-sunk); }
@@ -206,12 +229,12 @@ table.portal-table tr.is-check td { font-weight: 700; background: var(--paper-su
 /* ==========================================================================
    PAGE SHELL
    ========================================================================== */
-.portal-main { padding: 32px 0 64px; }
-.page-head { margin-bottom: 24px; }
-.page-head h1 { font-size: 1.6rem; margin-bottom: 6px; }
+.portal-main { padding: 22px 0 44px; }
+.page-head { margin-bottom: 18px; }
+.page-head h1 { font-size: 1.5rem; margin-bottom: 5px; }
 .page-head p { color: var(--ink-soft); }
-.section { margin-bottom: 32px; }
-.section h2 { font-size: 1.1rem; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 2px solid var(--ink); }
+.section { margin-bottom: 24px; }
+.section h2 { font-size: 1.05rem; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--ink); }
 
 /* ==========================================================================
    LOGIN PAGE
@@ -242,8 +265,9 @@ footer.site-footer { background: var(--paper-sunk); color: var(--ink); border-to
 .footer-school strong { color: var(--ink); font-family: var(--font-display); }
 
 html, body { height: 100%; }
-.page-shell { min-height: 100vh; display: flex; flex-direction: column; }
-.page-shell > .portal-main { flex: 1; }
+.page-shell { min-height: 100vh; display: flex; flex-direction: row; align-items: stretch; }
+.content-column { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.content-column > .portal-main { flex: 1; }
 
 /* ==========================================================================
    PRINT / PDF
@@ -252,7 +276,7 @@ html, body { height: 100%; }
 .print-letterhead { display: none; }
 
 @media print {
-	.masthead, .portal-footer, footer.site-footer,
+	.sidebar, .portal-footer, footer.site-footer,
 	.report-tabs, .report-filters, .btn-print, #nav-fees, #nav-reports,
 	.no-print {
 		display: none !important;
@@ -282,7 +306,8 @@ html, body { height: 100%; }
 	   or blanked on page 2+ instead of flowing naturally. Undo both for
 	   print so long statements/reports paginate correctly. */
 	.page-shell { display: block !important; min-height: 0 !important; }
-	.page-shell > .portal-main { flex: none !important; }
+	.content-column { display: block !important; }
+	.content-column > .portal-main { flex: none !important; }
 
 	/* Table wrappers use overflow-x:auto for on-screen horizontal
 	   scrolling - on paper there's no scrollbar, so a fixed-width
@@ -294,11 +319,23 @@ html, body { height: 100%; }
 /* ==========================================================================
    RESPONSIVE
    ========================================================================== */
-@media (max-width: 700px) {
-	.masthead .wrap { height: 64px; gap: 14px; }
-	.brand img { height: 32px; }
-	.masthead-role { display: none; }
-	.masthead-user .name { display: none; }
+@media (max-width: 800px) {
+	.page-shell { flex-direction: column; }
+	.sidebar {
+		position: sticky; top: 0; z-index: 10; align-self: auto;
+		width: 100%; height: auto; flex-direction: row; align-items: center;
+		border-right: none; border-bottom: 1px solid var(--line);
+		padding: 8px 12px; gap: 10px; overflow-x: auto;
+	}
+	.sidebar-brand { padding: 0; }
+	.sidebar-role { display: none; }
+	.sidebar-nav { flex-direction: row; gap: 4px; }
+	.sidebar-link { padding: 8px; }
+	.sidebar-link span:last-child { display: none; }
+	.sidebar-spacer { display: none; }
+	.sidebar-user { flex-direction: row; border-top: none; padding: 0; margin-left: auto; }
+	.sidebar-user .name { display: none; }
+	.btn-logout { width: auto; }
 	.footer-inner { flex-direction: column; text-align: center; }
 	.wrap { padding: 0 16px; }
 }

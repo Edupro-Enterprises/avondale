@@ -1,0 +1,1 @@
+exec(open('/home/frappe/frappe-bench/apply_payment_custom_field.py').read(), globals())

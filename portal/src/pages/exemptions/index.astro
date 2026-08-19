@@ -219,7 +219,7 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
 					const statusLabel = r.docstatus === 1 ? 'Submitted' : r.docstatus === 2 ? 'Cancelled' : 'Draft';
 					return `
 						<tr>
-							<td>${esc(r.student_name)}<br><span style="color:var(--ink-soft); font-size:0.78rem;">${esc(r.student)}</span></td>
+							<td><a href="/students/profile/?student=${encodeURIComponent(r.student)}">${esc(r.student_name)}</a><br><span style="color:var(--ink-soft); font-size:0.78rem;">${esc(r.student)}</span></td>
 							<td>${esc(r.exemption_type)}</td>
 							<td>${esc(r.approval_minutes_ref || '')}</td>
 							<td class="text-right tnum">${r.discount_percentage || 0}%</td>
