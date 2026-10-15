@@ -1,1 +1,0 @@
-exec(open('/home/frappe/frappe-bench/remove_grade2.py').read(), globals())

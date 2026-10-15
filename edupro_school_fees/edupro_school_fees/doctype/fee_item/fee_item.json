@@ -1,0 +1,25 @@
+{
+ "doctype": "DocType",
+ "name": "Fee Item",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "autoname": "field:item_name",
+ "sort_field": "modified",
+ "sort_order": "ASC",
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "item_name", "fieldtype": "Data", "label": "Fee Item Name", "reqd": 1, "unique": 1, "in_list_view": 1, "description": "e.g. Tuition, Levy, Boarding"},
+  {"fieldname": "currency", "fieldtype": "Select", "label": "Currency", "options": "ZiG\nUSD", "default": "ZiG", "reqd": 1, "in_list_view": 1, "description": "The currency default_amount (and every Fee Structure/Invoice line built from this item) is denominated in."},
+  {"fieldname": "default_amount", "fieldtype": "Currency", "label": "Default Amount", "options": "currency", "in_list_view": 1},
+  {"fieldname": "account", "fieldtype": "Link", "label": "Income Account", "options": "Account", "reqd": 1},
+  {"fieldname": "is_recurring", "fieldtype": "Check", "label": "Recurring Every Term"}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1},
+  {"role": "Bursar", "read": 1, "write": 1, "create": 1},
+  {"role": "School Head", "read": 1}
+ ]
+}

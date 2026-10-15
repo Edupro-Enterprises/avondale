@@ -1,0 +1,220 @@
+:root {
+  --radius: 0.85rem;
+  --background: #fafafa;
+  --foreground: #111827;
+  --card: #ffffff;
+  --card-foreground: #111827;
+  --popover: #ffffff;
+  --popover-foreground: #111827;
+  --primary: #ff0527;
+  --primary-foreground: #ffffff;
+  --secondary: #f3f4f6;
+  --secondary-foreground: #374151;
+  --muted: #f9fafb;
+  --muted-foreground: #6b7280;
+  --accent: #f9fafb;
+  --accent-foreground: #374151;
+  /* Deliberately further from --primary than a simple darken -- a
+     destructive action (reverse a receipt, reject a voucher, force a
+     logout) should not read as "just another red button." */
+  --destructive: #991b1b;
+  --border: #e5e7eb;
+  --input: #e5e7eb;
+  --ring: #ff0527;
+  --chart-1: #ff0527;
+  --chart-2: #0f172a;
+  --chart-3: #6b7280;
+  --chart-4: #16a34a;
+  --chart-5: #d97706;
+
+  /* Status tones for StatusBadge -- every value below clears WCAG AA
+     (4.5:1) against its own chip background, computed by hand; see
+     docs/audit/theme-audit-2026-09-14.md AUD-010/011 for the workings. */
+  --status-good: #047857;
+  --status-good-bg: #ecfdf5;
+  --status-warning: #b45309;
+  --status-warning-bg: #fffbeb;
+  --status-bad: #dc2626;
+  --status-bad-bg: #fef2f2;
+  --status-neutral: #475569;
+  --status-neutral-bg: #f1f5f9;
+  --status-info: #0369a1;
+  --status-info-bg: #f0f9ff;
+
+  /* Financial secondary figures (e.g. the ZiG equivalent next to a USD
+     amount) need AAA (7:1), not just AA -- darker than --muted-foreground
+     on purpose. */
+  --financial-muted: #475569;
+
+  --sidebar: #fafafa;
+  --sidebar-foreground: #111827;
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: #fff0f2;
+  --sidebar-accent-foreground: #ff0527;
+  --sidebar-border: #e5e7eb;
+  --sidebar-ring: var(--ring);
+}
+
+.dark {
+  --background: #0f172a;
+  --foreground: #f9fafb;
+  --card: #1a2436;
+  --card-foreground: #f9fafb;
+  --popover: #1a2436;
+  --popover-foreground: #f9fafb;
+  --primary: #ff3b52;
+  --primary-foreground: #ffffff;
+  --secondary: #1f2937;
+  --secondary-foreground: #f3f4f6;
+  --muted: #1f2937;
+  --muted-foreground: #9ca3af;
+  --accent: #1f2937;
+  --accent-foreground: #f3f4f6;
+  --destructive: #b91c1c;
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.15);
+  --ring: #ff3b52;
+  --chart-1: #ff3b52;
+  --chart-2: #94a3b8;
+  --chart-3: #cbd5e1;
+  --chart-4: #22c55e;
+  --chart-5: #f59e0b;
+
+  --status-good: #34d399;
+  --status-good-bg: rgba(16, 185, 129, 0.14);
+  --status-warning: #fbbf24;
+  --status-warning-bg: rgba(245, 158, 11, 0.14);
+  --status-bad: #f87171;
+  --status-bad-bg: rgba(239, 68, 68, 0.14);
+  --status-neutral: #94a3b8;
+  --status-neutral-bg: rgba(100, 116, 139, 0.14);
+  --status-info: #38bdf8;
+  --status-info-bg: rgba(14, 165, 233, 0.14);
+
+  --financial-muted: #cbd5e1;
+
+  --sidebar: #131c2e;
+  --sidebar-foreground: #f9fafb;
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: #3a1620;
+  --sidebar-accent-foreground: #ff6b7a;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-ring: var(--ring);
+}
+
+@theme inline {
+  /* Inter is the app's only real typeface -- every role in the type
+     scale below (labels through page titles) uses it. Manrope has no
+     assigned role; its one usage (appearance-form.tsx) is a font-switcher
+     preview sample, not a live UI choice, so don't reach for font-manrope
+     on a new page (AUD-005). */
+  --font-inter: 'Inter', 'sans-serif';
+  --font-manrope: 'Manrope', 'sans-serif';
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-status-good: var(--status-good);
+  --color-status-good-bg: var(--status-good-bg);
+  --color-status-warning: var(--status-warning);
+  --color-status-warning-bg: var(--status-warning-bg);
+  --color-status-bad: var(--status-bad);
+  --color-status-bad-bg: var(--status-bad-bg);
+  --color-status-neutral: var(--status-neutral);
+  --color-status-neutral-bg: var(--status-neutral-bg);
+  --color-status-info: var(--status-info);
+  --color-status-info-bg: var(--status-info-bg);
+  --color-financial-muted: var(--financial-muted);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Role-based type scale (defined, not yet rolled out -- see
+     docs/audit/theme-roadmap-2026-09-14.md Phase 2, AUD-001/002). Every
+     new page should reach for these instead of a raw text-xs/sm/base/lg
+     size, so "what size is body text" stays a one-line change. */
+  --text-label: 0.6875rem; /* 11px -- uppercase section labels, table headers */
+  --text-label--line-height: 1rem;
+  --text-body: 0.75rem; /* 12px -- the brief's compact base */
+  --text-body--line-height: 1.125rem;
+  --text-body-lg: 0.8125rem; /* 13px -- lightly emphasized body text */
+  --text-body-lg--line-height: 1.25rem;
+  --text-heading-sm: 0.875rem; /* 14px -- card/section titles */
+  --text-heading-sm--line-height: 1.25rem;
+  --text-heading-md: 1.125rem; /* 18px -- dialog titles */
+  --text-heading-md--line-height: 1.5rem;
+  --text-heading-lg: 1.5rem; /* 24px -- KPI stat figures */
+  --text-heading-lg--line-height: 1.75rem;
+  --text-heading-xl: 1.875rem; /* 30px -- page titles */
+  --text-heading-xl--line-height: 2.25rem;
+}
+
+/**
+ * Spacing rule (AUD-006): Tailwind's default 4px-grid spacing scale
+ * already covers every step this app needs -- the gap wasn't missing
+ * tokens, it was a missing rule for which step applies where. Until this
+ * is enforced by a shared component, follow this by hand:
+ *
+ *   - List/table row padding:  py-2 (compact, 8px) / py-3 (comfortable, 12px)
+ *   - Card body (no header above it):        p-4
+ *   - Card body (below a CardHeader):         pt-0 (header already carries the gap)
+ *   - Dialog padding:          p-4 (confirmation/simple form) / p-6 (wizard, many fields)
+ *   - Form field vertical gap: gap-3
+ *   - Section-to-section gap on a page:       gap-4 / mb-6
+ */
+
+/**
+ * Page-header pattern (AUD-058): two header shapes coexist by design, not
+ * by accident -- confirmed during the Phase 3 audit. Don't blend them on
+ * one page:
+ *
+ *   - List pages:      CardHeader with CardTitle + CardDescription, plus
+ *                       the search/filter row (FilterBar) inline in the
+ *                       same header. See students/index.tsx.
+ *   - Dashboard pages:  a plain KPI stat-card grid, no unifying header
+ *                       row -- the page's own <h1> above the grid carries
+ *                       the heading instead. See bursar/index.tsx.
+ */
+
+/**
+ * Button-hierarchy rule (AUD-059): exactly one primary (`variant='default'`)
+ * action per screen/header/dialog footer -- the one action that advances
+ * the user's actual goal here. Everything else is `outline` (secondary,
+ * equal visual weight to any other secondary action) or `ghost` (tertiary,
+ * row-level/icon-only actions). A destructive action is never primary red
+ * -- it gets `variant='destructive'`, which is visually distinct from the
+ * brand primary on purpose (AUD-014). When two actions in the same header
+ * look equally important, that's the signal one of them shouldn't be
+ * primary -- pick the one the page exists for.
+ */

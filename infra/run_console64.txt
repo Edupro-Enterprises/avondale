@@ -1,1 +1,0 @@
-exec(open('/home/frappe/frappe-bench/apply_receipting_setup.py').read(), globals())

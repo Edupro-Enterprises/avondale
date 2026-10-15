@@ -1,0 +1,40 @@
+{
+ "doctype": "DocType",
+ "name": "Asset",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "autoname": "field:asset_code",
+ "sort_field": "date_acquired",
+ "sort_order": "DESC",
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "asset_code", "fieldtype": "Data", "label": "Asset Serial Code", "reqd": 1, "unique": 1, "in_list_view": 1},
+  {"fieldname": "description", "fieldtype": "Data", "label": "Description", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "purchase_order", "fieldtype": "Link", "label": "Purchase Order", "options": "Purchase Order"},
+  {"fieldname": "praz_reference", "fieldtype": "Data", "label": "PRAZ Reference"},
+  {"fieldname": "date_acquired", "fieldtype": "Date", "label": "Date Acquired", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "historical_cost", "fieldtype": "Currency", "label": "Historical Cost", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "currency", "fieldtype": "Select", "label": "Currency", "options": "ZiG\nUSD", "default": "ZiG", "reqd": 1},
+  {"fieldname": "depreciation_method", "fieldtype": "Select", "label": "Depreciation Method", "options": "Straight Line", "default": "Straight Line", "reqd": 1},
+  {"fieldname": "depreciation_rate", "fieldtype": "Percent", "label": "Depreciation Rate (% per annum)", "reqd": 1},
+  {"fieldname": "depreciation_expense_account", "fieldtype": "Link", "label": "Depreciation Expense Account", "options": "Account", "reqd": 1},
+  {"fieldname": "accumulated_depreciation_account", "fieldtype": "Link", "label": "Accumulated Depreciation Account", "options": "Account", "reqd": 1},
+  {"fieldname": "accumulated_depreciation", "fieldtype": "Currency", "label": "Accumulated Depreciation", "read_only": 1, "default": "0"},
+  {"fieldname": "net_book_value", "fieldtype": "Currency", "label": "Net Book Value", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "physical_location", "fieldtype": "Data", "label": "Physical Location"},
+  {"fieldname": "condition", "fieldtype": "Select", "label": "Condition", "options": "Good\nFair\nPoor", "default": "Good"},
+  {"fieldname": "disposal_status", "fieldtype": "Select", "label": "Disposal Status", "options": "In Use\nDisposed", "default": "In Use", "in_list_view": 1},
+  {"fieldname": "disposal_date", "fieldtype": "Date", "label": "Disposal Date"},
+  {"fieldname": "disposal_praz_reference", "fieldtype": "Data", "label": "Disposal PRAZ Reference"}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1},
+  {"role": "Bursar", "read": 1, "write": 1, "create": 1},
+  {"role": "School Head", "read": 1},
+  {"role": "SDC Chairperson/Treasurer", "read": 1},
+  {"role": "District Education Auditor/Inspector", "read": 1}
+ ]
+}

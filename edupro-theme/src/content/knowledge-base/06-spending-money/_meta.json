@@ -1,0 +1,6 @@
+{
+  "title": "Spending Money",
+  "description": "Requisitions, procurement, quotations, and payment vouchers -- how a school spends its own money correctly.",
+  "order": 6,
+  "audience": ["sdc", "bursar", "head", "auditor"]
+}

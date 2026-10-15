@@ -1,0 +1,6 @@
+{
+  "title": "Budgeting & Fees",
+  "description": "How a school builds a budget, sets and gets fees approved, and the rule that no learner may be excluded for non-payment.",
+  "order": 4,
+  "audience": ["parent", "sdc", "bursar", "head", "auditor", "mopse"]
+}

@@ -1,0 +1,28 @@
+{
+ "doctype": "DocType",
+ "name": "Cost Center",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "autoname": "field:cost_center_name",
+ "sort_field": "modified",
+ "sort_order": "ASC",
+ "is_tree": 1,
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "cost_center_name", "fieldtype": "Data", "label": "Cost Center / Department Name", "reqd": 1, "unique": 1, "in_list_view": 1, "description": "e.g. Boarding, Sports, Administration, a specific SDC capital project"},
+  {"fieldname": "parent_cost_center", "fieldtype": "Link", "label": "Parent Cost Center", "options": "Cost Center"},
+  {"fieldname": "is_group", "fieldtype": "Check", "label": "Is Group"},
+  {"fieldname": "description", "fieldtype": "Small Text", "label": "Description"},
+  {"fieldname": "is_disabled", "fieldtype": "Check", "label": "Disabled"}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1},
+  {"role": "Bursar", "read": 1, "write": 1, "create": 1},
+  {"role": "School Head", "read": 1},
+  {"role": "SDC Chairperson/Treasurer", "read": 1},
+  {"role": "District Education Auditor/Inspector", "read": 1}
+ ]
+}

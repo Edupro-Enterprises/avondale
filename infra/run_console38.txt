@@ -1,1 +1,0 @@
-exec(open('/home/frappe/frappe-bench/debug_fees_error.py').read(), globals())

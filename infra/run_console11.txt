@@ -1,1 +1,0 @@
-exec(open('/home/frappe/frappe-bench/check_item_uom_field.py').read(), globals())

@@ -1,0 +1,6 @@
+{
+  "title": "Templates",
+  "description": "Downloadable forms and templates referenced throughout the knowledge base, in one place.",
+  "order": 10,
+  "audience": ["parent", "sdc", "bursar", "cashier", "head", "auditor", "mopse", "student"]
+}

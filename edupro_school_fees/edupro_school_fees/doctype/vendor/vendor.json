@@ -1,0 +1,33 @@
+{
+ "doctype": "DocType",
+ "name": "Vendor",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "autoname": "field:vendor_name",
+ "sort_field": "modified",
+ "sort_order": "ASC",
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "vendor_name", "fieldtype": "Data", "label": "Vendor Name", "reqd": 1, "unique": 1, "in_list_view": 1},
+  {"fieldname": "vendor_type", "fieldtype": "Select", "label": "Vendor Type", "options": "Sole Trader\nCompany\nCooperative\nOther", "default": "Company", "in_list_view": 1},
+  {"fieldname": "contact_person", "fieldtype": "Data", "label": "Contact Person"},
+  {"fieldname": "phone_number", "fieldtype": "Data", "label": "Phone Number"},
+  {"fieldname": "email", "fieldtype": "Data", "label": "Email", "options": "Email"},
+  {"fieldname": "address", "fieldtype": "Small Text", "label": "Address"},
+  {"fieldname": "tax_registration_number", "fieldtype": "Data", "label": "Tax Registration Number"},
+  {"fieldname": "approval_status", "fieldtype": "Select", "label": "Approval Status", "options": "Pending\nApproved\nSuspended", "default": "Pending", "read_only": 1, "in_list_view": 1, "description": "Set only via approve_vendor()/suspend_vendor() -- a Quotation can only be selected for a Purchase Order once its vendor is Approved."},
+  {"fieldname": "approved_by", "fieldtype": "Link", "label": "Approved/Suspended By", "options": "User", "read_only": 1},
+  {"fieldname": "approved_on", "fieldtype": "Datetime", "label": "Approved/Suspended On", "read_only": 1},
+  {"fieldname": "suspension_reason", "fieldtype": "Small Text", "label": "Suspension Reason", "read_only": 1}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1},
+  {"role": "Bursar", "read": 1, "write": 1, "create": 1},
+  {"role": "School Head", "read": 1, "write": 1},
+  {"role": "SDC Chairperson/Treasurer", "read": 1},
+  {"role": "District Education Auditor/Inspector", "read": 1}
+ ]
+}

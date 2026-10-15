@@ -1,0 +1,38 @@
+{
+ "doctype": "DocType",
+ "name": "Debtor Case",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "autoname": "naming_series:",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "naming_series", "fieldtype": "Select", "label": "Series", "options": "DC-.YYYY.-.#####", "default": "DC-.YYYY.-.#####"},
+  {"fieldname": "student", "fieldtype": "Link", "label": "Student", "options": "Student", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "parent_guardian", "fieldtype": "Link", "label": "Parent Guardian", "options": "Parent Guardian", "fetch_from": "student.guardian", "in_list_view": 1},
+  {"fieldname": "outstanding_amount", "fieldtype": "Currency", "label": "Outstanding Amount", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "ageing_bucket", "fieldtype": "Select", "label": "Ageing Bucket", "options": "Current\n1-30 Days\n31-60 Days\n61-90 Days\n90+ Days", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "days_overdue", "fieldtype": "Int", "label": "Days Overdue", "read_only": 1},
+  {"fieldname": "last_reminder_stage", "fieldtype": "Select", "label": "Last Reminder Stage", "options": "None\nFirst\nSecond\nEscalation", "default": "None", "read_only": 1},
+  {"fieldname": "workflow_state", "fieldtype": "Select", "label": "Case Status", "options": "Open\nPayment Plan Active\nEscalated\nResolved\nLegal", "default": "Open", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "assigned_to", "fieldtype": "Link", "label": "Assigned To", "options": "User"},
+  {"fieldname": "promised_amount", "fieldtype": "Currency", "label": "Promised Amount"},
+  {"fieldname": "promised_by_date", "fieldtype": "Date", "label": "Promised By"},
+  {"fieldname": "promise_notes", "fieldtype": "Small Text", "label": "Promise Notes"},
+  {"fieldname": "acknowledgment_of_debt", "fieldtype": "Attach", "label": "Acknowledgment of Debt"},
+  {"fieldname": "legal_escalation_notes", "fieldtype": "Small Text", "label": "Legal Escalation Notes"},
+  {"fieldname": "opened_on", "fieldtype": "Date", "label": "Opened On", "default": "Today", "read_only": 1},
+  {"fieldname": "resolved_on", "fieldtype": "Date", "label": "Resolved On", "read_only": 1}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1},
+  {"role": "Bursar", "read": 1, "write": 1, "create": 1},
+  {"role": "School Head", "read": 1, "write": 1},
+  {"role": "SDC Chairperson/Treasurer", "read": 1},
+  {"role": "District Education Auditor/Inspector", "read": 1}
+ ]
+}

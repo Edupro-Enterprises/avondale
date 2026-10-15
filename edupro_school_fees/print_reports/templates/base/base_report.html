@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>{% block doc_title_tag %}Report{% endblock %}</title>
+<style>{% include "base/styles.css" %}</style>
+{% block extra_style %}{% endblock %}
+</head>
+<body>
+<div class="page">
+  {% block header %}{% endblock %}
+  {% block content %}{% endblock %}
+  {% block signatures %}{% endblock %}
+  {% include "base/print_footer.html" %}
+</div>
+</body>
+</html>

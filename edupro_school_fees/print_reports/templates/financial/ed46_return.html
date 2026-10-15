@@ -1,0 +1,59 @@
+{% extends "base/base_report.html" %}
+{% from "components/signatures.html" import signature_block %}
+
+{% block doc_title_tag %}MoPSE ED46 Return {{ ed46.term }}{% endblock %}
+
+{% block extra_style %}
+<style>
+  /* Page size via wkhtmltopdf's own options (api.py) -- CSS @page size is
+     a no-op on wkhtmltopdf. */
+  .kv-table { width: 100%; border-collapse: collapse; margin-bottom: 10pt; font-size: 9.5pt; }
+  .kv-table td { padding: 3pt 0; vertical-align: top; }
+  .kv-table td.label { color: #666; width: 35%; }
+  .kv-table td.value { font-weight: bold; }
+  .section-heading { font-size: 10pt; font-weight: bold; color: #16324a; margin: 14pt 0 4pt; }
+  .staffing-box { border: 0.5pt solid #d8dee3; padding: 8pt; font-size: 9pt; min-height: 30pt; white-space: pre-wrap; }
+</style>
+{% endblock %}
+
+{% block header %}
+{% include "base/print_header.html" %}
+{% endblock %}
+
+{% block content %}
+<p class="section-heading" style="margin-top:0;">School Particulars</p>
+<table class="kv-table">
+  <tr><td class="label">School Name</td><td class="value">{{ ed46.school_name or "-" }}</td></tr>
+  {% if ed46.registration_number %}<tr><td class="label">Registration Number</td><td class="value">{{ ed46.registration_number }}</td></tr>{% endif %}
+  {% if ed46.emis_number %}<tr><td class="label">EMIS Number</td><td class="value">{{ ed46.emis_number }}</td></tr>{% endif %}
+  {% if ed46.school_code %}<tr><td class="label">School Code</td><td class="value">{{ ed46.school_code }}</td></tr>{% endif %}
+  {% if ed46.physical_address %}<tr><td class="label">Physical Address</td><td class="value">{{ ed46.physical_address }}</td></tr>{% endif %}
+  {% if ed46.district %}<tr><td class="label">District</td><td class="value">{{ ed46.district }}</td></tr>{% endif %}
+  {% if ed46.region %}<tr><td class="label">Region</td><td class="value">{{ ed46.region }}</td></tr>{% endif %}
+  <tr><td class="label">Term</td><td class="value">{{ ed46.term }}</td></tr>
+  <tr><td class="label">Status</td><td class="value">{{ ed46.workflow_state }}</td></tr>
+</table>
+
+<p class="section-heading">Enrolment and Revenue</p>
+<table class="kv-table">
+  <tr><td class="label">Total Enrolment</td><td class="value">{{ ed46.total_enrolment }}</td></tr>
+  <tr><td class="label">Levy Base Amount</td><td class="value">{{ ed46.levy_base_amount_display }}</td></tr>
+  <tr><td class="label">Total Revenue Billed</td><td class="value">{{ ed46.total_revenue_billed_display }}</td></tr>
+  <tr><td class="label">Total Revenue Realized</td><td class="value">{{ ed46.total_revenue_realized_display }}</td></tr>
+</table>
+
+<p class="section-heading">Staffing Support Analysis</p>
+<div class="staffing-box">{{ ed46.staffing_support_analysis or "Not provided." }}</div>
+
+{% if ed46.certified_on_display %}
+<p class="text-muted" style="font-size:8pt;margin-top:8pt;">Certified {{ ed46.certified_on_display }}.</p>
+{% endif %}
+{% endblock %}
+
+{% block signatures %}
+{{ signature_block([
+  ("Senior Bursar", "Certified" if ed46.bursar_certified else None),
+  ("School Head", "Certified" if ed46.school_head_certified else None),
+  ("SDC Chairperson", "Certified" if ed46.sdc_certified else None),
+]) }}
+{% endblock %}

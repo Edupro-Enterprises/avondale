@@ -1,0 +1,40 @@
+{
+ "doctype": "DocType",
+ "name": "MoPSE ED46 Return",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "autoname": "format:ED46-{term}",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "term", "fieldtype": "Link", "label": "Term", "options": "Term", "reqd": 1, "unique": 1, "in_list_view": 1},
+  {"fieldname": "school_name", "fieldtype": "Data", "label": "School Name", "read_only": 1},
+  {"fieldname": "registration_number", "fieldtype": "Data", "label": "Registration Number", "read_only": 1},
+  {"fieldname": "emis_number", "fieldtype": "Data", "label": "EMIS Number", "read_only": 1},
+  {"fieldname": "school_code", "fieldtype": "Data", "label": "School Code", "read_only": 1},
+  {"fieldname": "physical_address", "fieldtype": "Small Text", "label": "Physical Address", "read_only": 1},
+  {"fieldname": "district", "fieldtype": "Data", "label": "District", "read_only": 1},
+  {"fieldname": "region", "fieldtype": "Data", "label": "Region", "read_only": 1},
+  {"fieldname": "total_enrolment", "fieldtype": "Int", "label": "Total Enrolment", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "levy_base_amount", "fieldtype": "Currency", "label": "Levy Base Amount", "read_only": 1},
+  {"fieldname": "total_revenue_billed", "fieldtype": "Currency", "label": "Total Revenue Billed", "read_only": 1},
+  {"fieldname": "total_revenue_realized", "fieldtype": "Currency", "label": "Total Revenue Realized", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "staffing_support_analysis", "fieldtype": "Small Text", "label": "Staffing Support Analysis", "description": "No structured staffing/HR establishment data exists in this system yet -- enter a manual summary for this return."},
+  {"fieldname": "workflow_state", "fieldtype": "Select", "label": "Status", "options": "Draft\nPending Certification\nCertified", "default": "Draft", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "bursar_certified", "fieldtype": "Check", "label": "Certified by Senior Bursar", "read_only": 1},
+  {"fieldname": "school_head_certified", "fieldtype": "Check", "label": "Certified by School Head", "read_only": 1},
+  {"fieldname": "sdc_certified", "fieldtype": "Check", "label": "Certified by SDC Chairperson", "read_only": 1},
+  {"fieldname": "certified_on", "fieldtype": "Datetime", "label": "Certified On", "read_only": 1}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1},
+  {"role": "Bursar", "read": 1, "write": 1, "create": 1},
+  {"role": "School Head", "read": 1},
+  {"role": "SDC Chairperson/Treasurer", "read": 1},
+  {"role": "District Education Auditor/Inspector", "read": 1}
+ ]
+}

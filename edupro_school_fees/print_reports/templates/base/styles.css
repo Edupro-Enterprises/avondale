@@ -1,0 +1,312 @@
+/* Shared print stylesheet for every report in this package. Rendered by
+   wkhtmltopdf (via frappe.utils.pdf.get_pdf) -- NOT WeasyPrint -- so this
+   deliberately avoids flexbox/grid (wkhtmltopdf's WebKit engine doesn't
+   support them; confirmed live this session on the receipt/invoice email
+   templates) and leaves page numbering to wkhtmltopdf's own --footer-center
+   option (set per-report in pdf_service.py) rather than CSS `@page` counters,
+   which wkhtmltopdf does not reliably render. `@page` here is used only for
+   what wkhtmltopdf DOES honour: page size and margins. */
+
+@page {
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Resets the browser default ~1em top/bottom margin on every bare <p> --
+   left unreset, this was tipping several reports' total content height
+   just over a full page, causing a wholly blank trailing page even when
+   the visible content clearly fit with room to spare. Every element
+   below sets its own spacing explicitly. */
+p, h1, h2, h3 {
+  margin: 0;
+}
+
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 10.5pt;
+  color: #1a1a1a;
+  -webkit-print-color-adjust: exact;
+}
+
+.page {
+  padding: 14mm 14mm 10mm 14mm;
+}
+
+/* ---- Header ---------------------------------------------------------- */
+
+.report-header {
+  display: table;
+  width: 100%;
+  border-bottom: 2pt solid #16324a;
+  padding-bottom: 8pt;
+  margin-bottom: 12pt;
+}
+
+.report-header .brand-cell {
+  display: table-cell;
+  vertical-align: top;
+  width: 65%;
+}
+
+.report-header .doc-cell {
+  display: table-cell;
+  vertical-align: top;
+  width: 35%;
+  text-align: right;
+}
+
+.report-header .logo {
+  height: 40pt;
+  margin-bottom: 4pt;
+}
+
+.report-header .school-name {
+  font-size: 14pt;
+  font-weight: bold;
+  color: #16324a;
+  margin: 0;
+}
+
+.report-header .school-meta {
+  font-size: 8pt;
+  color: #555;
+  margin: 2pt 0 0;
+  line-height: 1.4;
+}
+
+.report-header .doc-title {
+  font-size: 13pt;
+  font-weight: bold;
+  color: #16324a;
+  text-transform: uppercase;
+  letter-spacing: 0.5pt;
+  margin: 0 0 4pt;
+}
+
+.report-header .doc-meta {
+  font-size: 8.5pt;
+  color: #444;
+  line-height: 1.5;
+}
+
+.report-header .doc-meta strong {
+  color: #1a1a1a;
+}
+
+/* ---- Metadata / filter summary row ----------------------------------- */
+
+.meta-strip {
+  display: table;
+  width: 100%;
+  background: #f4f6f8;
+  border: 0.5pt solid #d8dee3;
+  padding: 6pt 10pt;
+  margin-bottom: 12pt;
+  font-size: 8.5pt;
+}
+
+.meta-strip .meta-item {
+  display: table-cell;
+  padding-right: 14pt;
+  color: #444;
+}
+
+.meta-strip .meta-item strong {
+  display: block;
+  color: #16324a;
+  font-size: 8pt;
+  text-transform: uppercase;
+  letter-spacing: 0.3pt;
+  margin-bottom: 1pt;
+}
+
+/* ---- Summary cards (a row of totals) --------------------------------- */
+
+.summary-cards {
+  display: table;
+  width: 100%;
+  margin-bottom: 12pt;
+  border-spacing: 6pt 0;
+}
+
+.summary-cards .card {
+  display: table-cell;
+  border: 0.5pt solid #d8dee3;
+  border-top: 2pt solid #16324a;
+  padding: 8pt 10pt;
+  width: 25%;
+}
+
+.summary-cards .card .label {
+  font-size: 7.5pt;
+  text-transform: uppercase;
+  letter-spacing: 0.3pt;
+  color: #777;
+  margin: 0 0 3pt;
+}
+
+.summary-cards .card .value {
+  font-size: 13pt;
+  font-weight: bold;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+/* ---- Financial tables -------------------------------------------------*/
+
+table.financial-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 12pt;
+  font-size: 9pt;
+}
+
+table.financial-table thead {
+  display: table-header-group; /* repeats on each page in wkhtmltopdf */
+}
+
+table.financial-table tr {
+  page-break-inside: avoid;
+}
+
+table.financial-table th {
+  background: #16324a;
+  color: #fff;
+  text-align: left;
+  padding: 5pt 7pt;
+  font-size: 8pt;
+  text-transform: uppercase;
+  letter-spacing: 0.3pt;
+  font-weight: normal;
+}
+
+table.financial-table th.num,
+table.financial-table td.num {
+  text-align: right;
+}
+
+table.financial-table td {
+  padding: 5pt 7pt;
+  border-bottom: 0.5pt solid #e2e6ea;
+}
+
+table.financial-table tbody tr:nth-child(even) {
+  background: #fafbfc;
+}
+
+table.financial-table tfoot td {
+  border-top: 1pt solid #16324a;
+  border-bottom: none;
+  font-weight: bold;
+  padding-top: 6pt;
+}
+
+.text-muted {
+  color: #777;
+}
+
+.status-pill {
+  display: inline-block;
+  padding: 1.5pt 6pt;
+  border-radius: 8pt;
+  font-size: 7.5pt;
+  text-transform: uppercase;
+  letter-spacing: 0.3pt;
+}
+
+.status-pill.good {
+  background: #e5f3ea;
+  color: #1e6b3a;
+}
+
+.status-pill.bad {
+  background: #fbe7e7;
+  color: #9c2b2b;
+}
+
+.status-pill.neutral {
+  background: #eceef0;
+  color: #4a5257;
+}
+
+/* ---- Signatures -------------------------------------------------------*/
+
+.signatures {
+  display: table;
+  width: 100%;
+  margin-top: 26pt;
+}
+
+.signatures .sig-cell {
+  display: table-cell;
+  width: 33.33%;
+  padding-right: 12pt;
+}
+
+.signatures .sig-line {
+  border-top: 0.75pt solid #333;
+  margin-top: 22pt;
+  padding-top: 3pt;
+  font-size: 8pt;
+  color: #444;
+}
+
+.signatures .sig-line .sig-role {
+  display: block;
+  font-size: 7.5pt;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.3pt;
+}
+
+/* ---- Footer -------------------------------------------------------- */
+
+.report-footer {
+  margin-top: 14pt;
+  border-top: 0.5pt solid #d8dee3;
+  padding-top: 6pt;
+  font-size: 7.5pt;
+  color: #888;
+}
+
+.report-footer .sample-banner {
+  text-align: center;
+  color: #9c2b2b;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1pt;
+  margin-bottom: 6pt;
+}
+
+.watermark-reprint {
+  text-align: center;
+  color: #9c2b2b;
+  font-size: 9pt;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1pt;
+  border: 1pt solid #9c2b2b;
+  padding: 3pt 0;
+  margin-bottom: 10pt;
+}
+
+.watermark-reversed {
+  text-align: center;
+  color: #9c2b2b;
+  font-size: 9pt;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1pt;
+  border: 1pt solid #9c2b2b;
+  padding: 3pt 0;
+  margin-bottom: 10pt;
+  background: #fbe7e7;
+}

@@ -1,0 +1,6 @@
+{
+  "title": "Audit & Risk",
+  "description": "Internal controls, what auditors check, and how to respond to and act on audit findings.",
+  "order": 9,
+  "audience": ["sdc", "bursar", "head", "auditor", "mopse"]
+}

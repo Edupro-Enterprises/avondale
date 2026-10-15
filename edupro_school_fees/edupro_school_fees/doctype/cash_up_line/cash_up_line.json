@@ -1,0 +1,17 @@
+{
+ "doctype": "DocType",
+ "name": "Cash Up Line",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 1,
+ "issingle": 0,
+ "is_submittable": 0,
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "payment_method", "fieldtype": "Link", "label": "Payment Method", "options": "Payment Method", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "system_amount", "fieldtype": "Currency", "label": "System Amount", "read_only": 1, "in_list_view": 1, "description": "Sum of this cashier's submitted Receipts for this payment method on this date -- computed, not entered."},
+  {"fieldname": "counted_amount", "fieldtype": "Currency", "label": "Counted Amount", "reqd": 1, "in_list_view": 1, "description": "What the cashier physically counted."},
+  {"fieldname": "variance", "fieldtype": "Currency", "label": "Variance", "read_only": 1, "in_list_view": 1, "description": "Counted minus System. Computed on submission."}
+ ],
+ "permissions": []
+}

@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "helvetica",
+        "createdAt": "2026-09-18T18:16:12.378Z",
+        "reason": "Print financial documents (receipts/statements), not a web UI -- Helvetica/Arial is the deliberate, correct choice for an official accounting document (matches Sage/QuickBooks/Xero convention the brief asked for) and matches the pre-existing font-family already used in this same codebase's notifications.py email receipt/invoice templates. The overused-font rule targets marketing-site font clichés, not print financial-document typography."
+      }
+    ]
+  }
+}

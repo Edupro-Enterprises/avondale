@@ -1,0 +1,10 @@
+{# Expects: is_sample (bool), generated_on (str, already formatted), branding (dict). #}
+{% if is_sample %}
+<p class="sample-banner">Sample data &mdash; not a real financial record</p>
+{% endif %}
+<div class="report-footer">
+  {% if branding.receipt_footer %}
+  <p style="margin-bottom: 3pt;">{{ branding.receipt_footer }}</p>
+  {% endif %}
+  <p>Generated {{ generated_on }} &nbsp;&middot;&nbsp; {{ branding.school_name or "Edupro SMS" }} &nbsp;&middot;&nbsp; This is a system-generated document.</p>
+</div>

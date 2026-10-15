@@ -1,0 +1,28 @@
+{
+ "doctype": "DocType",
+ "name": "Sponsor",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "autoname": "field:sponsor_name",
+ "sort_field": "modified",
+ "sort_order": "ASC",
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "sponsor_name", "fieldtype": "Data", "label": "Sponsor Name", "reqd": 1, "unique": 1, "in_list_view": 1},
+  {"fieldname": "sponsor_type", "fieldtype": "Select", "label": "Sponsor Type", "options": "Individual\nCompany\nNGO\nGovernment Programme\nChurch/Trust", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "contact_person", "fieldtype": "Data", "label": "Contact Person"},
+  {"fieldname": "phone_number", "fieldtype": "Data", "label": "Phone Number", "in_list_view": 1},
+  {"fieldname": "email", "fieldtype": "Data", "label": "Email", "options": "Email"},
+  {"fieldname": "address", "fieldtype": "Small Text", "label": "Address"}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1},
+  {"role": "Bursar", "read": 1, "write": 1, "create": 1},
+  {"role": "School Head", "read": 1},
+  {"role": "District Education Auditor/Inspector", "read": 1},
+  {"role": "Parent/Guardian", "read": 1}
+ ]
+}

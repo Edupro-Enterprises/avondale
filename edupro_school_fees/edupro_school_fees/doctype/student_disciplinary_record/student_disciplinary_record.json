@@ -1,0 +1,18 @@
+{
+ "doctype": "DocType",
+ "name": "Student Disciplinary Record",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 1,
+ "issingle": 0,
+ "is_submittable": 0,
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "incident_date", "fieldtype": "Date", "label": "Date", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "infraction", "fieldtype": "Data", "label": "Infraction", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "hearing_notes", "fieldtype": "Small Text", "label": "Hearing Notes"},
+  {"fieldname": "corrective_action", "fieldtype": "Small Text", "label": "Corrective Action"},
+  {"fieldname": "recorded_by", "fieldtype": "Link", "label": "Recorded By", "options": "User", "default": "__user", "read_only": 1}
+ ],
+ "permissions": []
+}

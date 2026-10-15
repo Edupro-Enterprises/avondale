@@ -1,1 +1,0 @@
-exec(open('/home/frappe/frappe-bench/check_fee_category_hook.py').read(), globals())

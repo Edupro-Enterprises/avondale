@@ -1,0 +1,28 @@
+{
+ "doctype": "DocType",
+ "name": "Portal Invitation",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "autoname": "hash",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "parent_guardian", "fieldtype": "Link", "label": "Parent Guardian", "options": "Parent Guardian", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "token_hash", "fieldtype": "Data", "label": "Token Hash", "reqd": 1, "unique": 1, "read_only": 1, "description": "SHA-256 of the raw token. The raw token itself is never stored anywhere -- it exists only in the single create_portal_invitation() response."},
+  {"fieldname": "delivery_channel", "fieldtype": "Select", "label": "Delivery Channel", "options": "Phone\nEmail", "reqd": 1, "read_only": 1, "in_list_view": 1},
+  {"fieldname": "delivery_target", "fieldtype": "Data", "label": "Delivered To", "read_only": 1, "description": "The phone number or email this invitation was issued for -- a channel already on file and verified to belong to the guardian, never a guessable value."},
+  {"fieldname": "expires_at", "fieldtype": "Datetime", "label": "Expires At", "reqd": 1, "read_only": 1, "in_list_view": 1},
+  {"fieldname": "used_at", "fieldtype": "Datetime", "label": "Used At", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "revoked_at", "fieldtype": "Datetime", "label": "Revoked At", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "revoked_by", "fieldtype": "Link", "label": "Revoked By", "options": "User", "read_only": 1}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1},
+  {"role": "Bursar", "read": 1, "write": 1, "create": 1},
+  {"role": "School Head", "read": 1, "write": 1}
+ ]
+}

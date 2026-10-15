@@ -1,0 +1,6 @@
+{
+  "title": "Reference",
+  "description": "Glossary, acronyms, and quick-reference material.",
+  "order": 11,
+  "audience": ["parent", "sdc", "bursar", "cashier", "head", "auditor", "mopse", "student"]
+}

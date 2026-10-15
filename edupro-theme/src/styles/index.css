@@ -1,0 +1,180 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import './theme.css';
+@plugin '@tailwindcss/typography';
+
+@custom-variant dark (&:is(.dark *));
+
+/* Print rule for the KB's "Print this article" button: isolates the
+ * article from the app chrome (sidebar/header/TOC), keeps interactive-only
+ * controls out via .print\:hidden (favourite/feedback/comments/print
+ * button, already tagged at the component level), and avoids ugly mid-
+ * element page breaks for headings/tables/figures. */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .kb-print-article,
+  .kb-print-article * {
+    visibility: visible;
+  }
+  .kb-print-article {
+    position: absolute;
+    inset: 0;
+  }
+  @page {
+    margin: 2cm;
+  }
+  .kb-print-article h1,
+  .kb-print-article h2,
+  .kb-print-article h3 {
+    break-after: avoid;
+  }
+  .kb-print-article table,
+  .kb-print-article figure {
+    break-inside: avoid;
+  }
+  .kb-print-article a[href]::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.8em;
+    font-weight: normal;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  html {
+    @apply overflow-x-hidden scroll-smooth;
+  }
+
+  body {
+    @apply min-h-svh w-full bg-[radial-gradient(circle_at_top,_rgba(15,23,42,0.04),transparent_20%),linear-gradient(180deg,#fafafa_0%,#f7f7f7_100%)] text-foreground has-[div[data-variant='inset']]:bg-sidebar;
+  }
+
+  .dark body {
+    @apply bg-[radial-gradient(circle_at_top,_rgba(255,59,82,0.08),transparent_18%),linear-gradient(180deg,#0f172a_0%,#0b1220_100%)];
+  }
+
+  body[data-scroll-locked] {
+    overflow: unset !important;
+  }
+
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--primary) 25%, transparent);
+  }
+
+  @media screen and (max-width: 767px) {
+    input,
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
+  }
+}
+
+/* Reduced motion: collapse enter/exit chrome (dialog zoom/fade, dropdown
+   slide, sidebar collapsible height) to effectively instant rather than
+   removing it -- the state change still happens, it just isn't animated.
+   Deliberately does NOT touch animate-spin or other looping feedback
+   (a stalled loading spinner reads as "broken," not "calmer"). */
+@media (prefers-reduced-motion: reduce) {
+  .animate-in,
+  .animate-out,
+  .CollapsibleContent[data-state='open'],
+  .CollapsibleContent[data-state='closed'] {
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* Printed statements/receipts must stay light regardless of the viewer's
+   active theme -- force the light token values whenever .dark is present
+   on a print target. */
+@media print {
+  .dark {
+    color-scheme: light;
+    --background: #fafafa;
+    --foreground: #111827;
+    --card: #ffffff;
+    --card-foreground: #111827;
+    --popover: #ffffff;
+    --popover-foreground: #111827;
+    --primary: #ff0527;
+    --primary-foreground: #ffffff;
+    --secondary: #f3f4f6;
+    --secondary-foreground: #374151;
+    --muted: #f9fafb;
+    --muted-foreground: #6b7280;
+    --accent: #f9fafb;
+    --accent-foreground: #374151;
+    --destructive: #991b1b;
+    --border: #e5e7eb;
+    --input: #e5e7eb;
+    --ring: #ff0527;
+    --status-good: #047857;
+    --status-good-bg: #ecfdf5;
+    --status-warning: #b45309;
+    --status-warning-bg: #fffbeb;
+    --status-bad: #dc2626;
+    --status-bad-bg: #fef2f2;
+    --status-neutral: #475569;
+    --status-neutral-bg: #f1f5f9;
+    --status-info: #0369a1;
+    --status-info-bg: #f0f9ff;
+    --financial-muted: #475569;
+  }
+}
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+}
+
+@utility no-scrollbar {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@utility faded-bottom {
+  @apply after:pointer-events-none after:absolute after:inset-s-0 after:bottom-0 after:hidden after:h-32 after:w-full after:rounded-b-2xl after:bg-[linear-gradient(180deg,transparent_10%,var(--background)_70%)] md:after:block;
+}
+
+.CollapsibleContent {
+  overflow: hidden;
+}
+.CollapsibleContent[data-state='open'] {
+  animation: slideDown 300ms ease-out;
+}
+.CollapsibleContent[data-state='closed'] {
+  animation: slideUp 300ms ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-collapsible-content-height);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    height: var(--radix-collapsible-content-height);
+  }
+  to {
+    height: 0;
+  }
+}

@@ -1,0 +1,70 @@
+{
+ "doctype": "DocType",
+ "name": "Applicant",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "autoname": "naming_series:",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "naming_series", "fieldtype": "Select", "label": "Series", "options": "APP-.YYYY.-.#####", "default": "APP-.YYYY.-.#####"},
+  {"fieldname": "full_legal_name", "fieldtype": "Data", "label": "Full Legal Name", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "date_of_birth", "fieldtype": "Date", "label": "Date of Birth", "reqd": 1},
+  {"fieldname": "gender", "fieldtype": "Select", "label": "Gender", "options": "Female\nMale"},
+  {"fieldname": "home_address", "fieldtype": "Small Text", "label": "Home Address"},
+
+  {"fieldname": "placement_section", "fieldtype": "Section Break", "label": "Target Placement"},
+  {"fieldname": "academic_year", "fieldtype": "Link", "label": "Academic Year", "options": "Academic Year", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "intended_term", "fieldtype": "Link", "label": "Intended Term", "options": "Term"},
+  {"fieldname": "entry_grade", "fieldtype": "Data", "label": "Entry Grade/Form"},
+  {"fieldname": "attendance_type", "fieldtype": "Select", "label": "Attendance Type", "options": "Day Scholar\nBoarder", "default": "Day Scholar"},
+  {"fieldname": "beneficiary_category", "fieldtype": "Link", "label": "Beneficiary Category", "options": "Beneficiary Category"},
+
+  {"fieldname": "academic_record_section", "fieldtype": "Section Break", "label": "Previous Academic Record"},
+  {"fieldname": "previous_school_name", "fieldtype": "Data", "label": "Previous School Name"},
+  {"fieldname": "previous_school_emis_number", "fieldtype": "Data", "label": "Previous School EMIS Number"},
+  {"fieldname": "last_grade_completed", "fieldtype": "Data", "label": "Last Grade Completed"},
+  {"fieldname": "national_exam_type", "fieldtype": "Select", "label": "National Exam Type", "options": "\nGrade 7\nO-Level\nOther"},
+  {"fieldname": "national_exam_results", "fieldtype": "Small Text", "label": "National Exam Results"},
+
+  {"fieldname": "application_fee_section", "fieldtype": "Section Break", "label": "Application Fee"},
+  {"fieldname": "application_fee_receipt_number", "fieldtype": "Data", "label": "Receipt Number"},
+  {"fieldname": "application_fee_amount", "fieldtype": "Currency", "label": "Amount"},
+  {"fieldname": "application_fee_currency", "fieldtype": "Select", "label": "Currency", "options": "ZiG\nUSD", "default": "ZiG"},
+  {"fieldname": "application_fee_payment_method", "fieldtype": "Data", "label": "Payment Method", "description": "e.g. Cash, EcoCash, Bank Transfer -- informational only, doesn't determine which account the fee posts to."},
+  {"fieldname": "application_fee_journal_entry", "fieldtype": "Link", "label": "Application Fee Journal Entry", "options": "Journal Entry", "read_only": 1, "description": "Set automatically once the application fee has been posted to the ledger (ZiG-denominated fees only -- see applicant.py)."},
+
+  {"fieldname": "guardian_section", "fieldtype": "Section Break", "label": "Guardian Contact"},
+  {"fieldname": "guardian_name", "fieldtype": "Data", "label": "Guardian Name", "reqd": 1},
+  {"fieldname": "guardian_relationship", "fieldtype": "Select", "label": "Relationship", "options": "Mother\nFather\nGuardian\nOther"},
+  {"fieldname": "guardian_phone", "fieldtype": "Data", "label": "Guardian Phone", "reqd": 1},
+  {"fieldname": "guardian_email", "fieldtype": "Data", "label": "Guardian Email", "options": "Email"},
+
+  {"fieldname": "documents_section", "fieldtype": "Section Break", "label": "Application Documents"},
+  {"fieldname": "documents", "fieldtype": "Table", "label": "Documents", "options": "Applicant Document"},
+
+  {"fieldname": "decision_section", "fieldtype": "Section Break", "label": "Assessment & Decision"},
+  {"fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Under Review\nWaitlisted\nAccepted\nDeclined", "default": "Under Review", "in_list_view": 1},
+  {"fieldname": "decision_notes", "fieldtype": "Small Text", "label": "Decision Notes"},
+
+  {"fieldname": "enrolment_section", "fieldtype": "Section Break", "label": "Enrolment (once Accepted)"},
+  {"fieldname": "offer_accepted_on", "fieldtype": "Date", "label": "Offer Accepted On"},
+  {"fieldname": "offer_acceptance_document", "fieldtype": "Attach", "label": "Offer Acceptance Document"},
+  {"fieldname": "birth_certificate", "fieldtype": "Attach", "label": "Birth Certificate"},
+  {"fieldname": "passport_photo", "fieldtype": "Attach Image", "label": "Passport Photo"},
+  {"fieldname": "transfer_letter", "fieldtype": "Attach", "label": "Transfer Letter"},
+  {"fieldname": "immunization_card", "fieldtype": "Attach", "label": "Immunization Card"},
+  {"fieldname": "enrolled_student", "fieldtype": "Link", "label": "Enrolled As", "options": "Student", "read_only": 1},
+  {"fieldname": "enrolled_on", "fieldtype": "Datetime", "label": "Enrolled On", "read_only": 1}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 0, "create": 0, "delete": 0},
+  {"role": "Bursar", "read": 1, "write": 1, "create": 1},
+  {"role": "School Head", "read": 1, "write": 1},
+  {"role": "District Education Auditor/Inspector", "read": 1}
+ ]
+}

@@ -1,0 +1,11 @@
+[pre_model_sync]
+edupro_school_fees.patches.create_roles
+edupro_school_fees.patches.create_extended_roles
+edupro_school_fees.patches.lock_down_desk_access
+edupro_school_fees.patches.create_portal_roles
+
+[post_model_sync]
+edupro_school_fees.patches.backfill_journal_entry_fx
+edupro_school_fees.patches.enable_mfa_for_privileged_roles
+edupro_school_fees.patches.enable_mfa_for_system_manager
+edupro_school_fees.patches.set_session_timeout

@@ -1,0 +1,31 @@
+{
+ "doctype": "DocType",
+ "name": "Cash Up",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "autoname": "naming_series:",
+ "sort_field": "cash_up_date",
+ "sort_order": "DESC",
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "naming_series", "fieldtype": "Select", "label": "Series", "options": "CSHUP-.YYYY.-.#####", "default": "CSHUP-.YYYY.-.#####"},
+  {"fieldname": "cashier", "fieldtype": "Link", "label": "Cashier", "options": "User", "reqd": 1, "default": "__user", "in_list_view": 1},
+  {"fieldname": "cash_up_date", "fieldtype": "Date", "label": "Cash-Up Date", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "lines", "fieldtype": "Table", "label": "Payment Methods", "options": "Cash Up Line", "reqd": 1},
+  {"fieldname": "handover_to", "fieldtype": "Link", "label": "Handed Over To", "options": "User", "description": "Who is receiving the physical float for the next shift, if anyone."},
+  {"fieldname": "cash_handed_over", "fieldtype": "Currency", "label": "Cash Handed Over", "description": "The physical amount actually handed over -- may differ from any single line above if multiple currencies/methods are being bundled into one float handover."},
+  {"fieldname": "notes", "fieldtype": "Small Text", "label": "Notes"},
+  {"fieldname": "workflow_state", "fieldtype": "Select", "label": "Status", "options": "Draft\nBalanced\nVariance Flagged\nResolved", "default": "Draft", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "reviewed_by", "fieldtype": "Link", "label": "Reviewed By", "options": "User", "read_only": 1},
+  {"fieldname": "reviewed_on", "fieldtype": "Datetime", "label": "Reviewed On", "read_only": 1}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 0, "create": 0, "delete": 0},
+  {"role": "Bursar", "read": 1, "write": 1, "create": 1},
+  {"role": "School Head", "read": 1},
+  {"role": "District Education Auditor/Inspector", "read": 1}
+ ]
+}

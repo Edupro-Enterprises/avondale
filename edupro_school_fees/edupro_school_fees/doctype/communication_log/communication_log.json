@@ -1,0 +1,31 @@
+{
+ "doctype": "DocType",
+ "name": "Communication Log",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "autoname": "hash",
+ "sort_field": "logged_on",
+ "sort_order": "DESC",
+ "in_create": 1,
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "debtor_case", "fieldtype": "Link", "label": "Debtor Case", "options": "Debtor Case", "in_list_view": 1},
+  {"fieldname": "parent_guardian", "fieldtype": "Link", "label": "Parent Guardian", "options": "Parent Guardian", "in_list_view": 1, "description": "Not set for a pre-enrolment Applicant communication -- see applicant below instead."},
+  {"fieldname": "applicant", "fieldtype": "Link", "label": "Applicant", "options": "Applicant", "in_list_view": 1, "description": "Set instead of parent_guardian for a communication sent before a real Parent Guardian record exists yet."},
+  {"fieldname": "student", "fieldtype": "Link", "label": "Student", "options": "Student", "in_list_view": 1},
+  {"fieldname": "channel", "fieldtype": "Select", "label": "Channel", "options": "Phone\nSMS\nEmail\nWhatsApp\nIn-Person\nLetter", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "direction", "fieldtype": "Select", "label": "Direction", "options": "Outbound\nInbound", "default": "Outbound", "reqd": 1},
+  {"fieldname": "summary", "fieldtype": "Small Text", "label": "Summary", "reqd": 1},
+  {"fieldname": "logged_by", "fieldtype": "Link", "label": "Logged By", "options": "User", "default": "__user", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "logged_on", "fieldtype": "Datetime", "label": "Logged On", "default": "now", "read_only": 1, "in_list_view": 1}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1},
+  {"role": "Bursar", "read": 1, "create": 1, "write": 0},
+  {"role": "School Head", "read": 1, "create": 1, "write": 0},
+  {"role": "SDC Chairperson/Treasurer", "read": 1}
+ ]
+}

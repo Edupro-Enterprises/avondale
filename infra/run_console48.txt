@@ -1,1 +1,0 @@
-exec(open('/home/frappe/frappe-bench/verify_billing2.py').read(), globals())

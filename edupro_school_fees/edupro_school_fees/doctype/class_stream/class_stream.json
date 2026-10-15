@@ -1,0 +1,25 @@
+{
+ "doctype": "DocType",
+ "name": "Class Stream",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "autoname": "field:stream_name",
+ "sort_field": "modified",
+ "sort_order": "ASC",
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "stream_name", "fieldtype": "Data", "label": "Stream Name", "reqd": 1, "unique": 1, "in_list_view": 1, "description": "e.g. Form 2A -- must match the free-text value entered in Student.grade for enrolment counts to line up."},
+  {"fieldname": "grade_group", "fieldtype": "Link", "label": "Grade Group", "options": "Grade Group", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "capacity", "fieldtype": "Int", "label": "Capacity"}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1},
+  {"role": "Bursar", "read": 1, "write": 1, "create": 1},
+  {"role": "School Head", "read": 1},
+  {"role": "SDC Chairperson/Treasurer", "read": 1},
+  {"role": "District Education Auditor/Inspector", "read": 1}
+ ]
+}

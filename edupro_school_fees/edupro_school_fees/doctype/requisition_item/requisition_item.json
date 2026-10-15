@@ -1,0 +1,18 @@
+{
+ "doctype": "DocType",
+ "name": "Requisition Item",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 1,
+ "issingle": 0,
+ "is_submittable": 0,
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "description", "fieldtype": "Data", "label": "Description", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "quantity", "fieldtype": "Float", "label": "Quantity", "default": "1", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "unit", "fieldtype": "Data", "label": "Unit", "description": "e.g. each, box, ream"},
+  {"fieldname": "estimated_unit_cost", "fieldtype": "Currency", "label": "Estimated Unit Cost", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "estimated_amount", "fieldtype": "Currency", "label": "Estimated Amount", "read_only": 1, "in_list_view": 1}
+ ],
+ "permissions": []
+}

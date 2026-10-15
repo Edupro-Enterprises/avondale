@@ -1,0 +1,24 @@
+{
+ "doctype": "DocType",
+ "name": "KB Feedback",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "autoname": "hash",
+ "sort_field": "submitted_on",
+ "sort_order": "DESC",
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "article_slug", "fieldtype": "Data", "label": "Article Slug", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "user", "fieldtype": "Link", "label": "User", "options": "User", "default": "__user", "read_only": 1, "reqd": 1, "in_list_view": 1},
+  {"fieldname": "vote", "fieldtype": "Select", "label": "Vote", "options": "Up\nDown", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "comment", "fieldtype": "Small Text", "label": "Comment"},
+  {"fieldname": "submitted_on", "fieldtype": "Datetime", "label": "Submitted On", "default": "now"}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1},
+  {"role": "All", "read": 1, "write": 1, "create": 1, "delete": 1, "if_owner": 1}
+ ]
+}

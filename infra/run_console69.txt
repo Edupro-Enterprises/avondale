@@ -1,1 +1,0 @@
-exec(open('/home/frappe/frappe-bench/check_pe_reference.py').read(), globals())

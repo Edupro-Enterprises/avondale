@@ -1,0 +1,72 @@
+{% extends "base/base_report.html" %}
+{% from "components/signatures.html" import signature_block %}
+
+{% block doc_title_tag %}Student Fee Statement {{ statement.student }}{% endblock %}
+
+{% block extra_style %}
+<style>
+  /* Page size via wkhtmltopdf's own options (api.py) -- CSS @page size is
+     a no-op on wkhtmltopdf. */
+  .kv-table { width: 100%; border-collapse: collapse; margin-bottom: 10pt; font-size: 9.5pt; }
+  .kv-table td { padding: 3pt 0; vertical-align: top; }
+  .kv-table td.label { color: #666; width: 30%; }
+  .kv-table td.value { font-weight: bold; }
+  .balance-block { text-align: center; border: 1.5pt solid #16324a; padding: 12pt; margin: 14pt 0; }
+  .balance-block .label { font-size: 9pt; text-transform: uppercase; letter-spacing: 0.5pt; color: #666; margin: 0; }
+  .balance-block .amount { font-size: 28pt; font-weight: bold; color: #16324a; margin: 3pt 0 0; }
+  .convention-note { font-size: 7.5pt; color: #888; margin-top: 4pt; }
+</style>
+{% endblock %}
+
+{% block header %}
+{% include "base/print_header.html" %}
+{% endblock %}
+
+{% block content %}
+<table class="kv-table">
+  <tr><td class="label">Student</td><td class="value">{{ statement.student_name }}</td></tr>
+  <tr><td class="label">Student ID</td><td class="value">{{ statement.student }}</td></tr>
+  {% if statement.grade %}<tr><td class="label">Grade / Class</td><td class="value">{{ statement.grade }}</td></tr>{% endif %}
+  {% if statement.guardian_name %}<tr><td class="label">Parent / Guardian</td><td class="value">{{ statement.guardian_name }}</td></tr>{% endif %}
+</table>
+
+<table class="financial-table">
+  <thead><tr><th>Date</th><th>Reference</th><th>Description</th><th class="num">Invoiced</th><th class="num">Paid</th><th class="num">Balance</th></tr></thead>
+  <tbody>
+    {% for row in statement.transactions %}
+    <tr>{% for cell in row %}<td{% if loop.index0 >= 3 %} class="num"{% endif %}>{{ cell }}</td>{% endfor %}</tr>
+    {% endfor %}
+    {% if statement.transactions | length == 0 %}
+    <tr><td colspan="6" class="text-muted">No transactions on record.</td></tr>
+    {% endif %}
+  </tbody>
+</table>
+
+<table class="kv-table">
+  <tr><td class="label">Opening Balance</td><td class="value">{{ statement.opening_balance_display }}</td></tr>
+  <tr><td class="label">Total Invoiced</td><td class="value">{{ statement.total_invoiced_display }}</td></tr>
+  <tr><td class="label">Total Paid</td><td class="value">{{ statement.total_paid_display }}</td></tr>
+</table>
+
+<div class="balance-block">
+  <p class="label">Outstanding Balance</p>
+  <p class="amount">{{ statement.outstanding_balance_display }}</p>
+  <p class="convention-note">A positive balance is an amount owed to the school; $0.00 means the account is fully settled. This statement never nets a credit against a different student's account.</p>
+</div>
+
+{% if statement.banking_details %}
+<p class="section-heading" style="font-size:10pt;font-weight:bold;color:#16324a;margin:14pt 0 4pt;">School Banking Details</p>
+<table class="financial-table">
+  <thead><tr><th>Bank</th><th>Fee Stream</th><th>Account Name</th><th>Account Number</th><th>Currency</th></tr></thead>
+  <tbody>
+    {% for row in statement.banking_details %}
+    <tr>{% for cell in row %}<td>{{ cell }}</td>{% endfor %}</tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+{% endblock %}
+
+{% block signatures %}
+{{ signature_block([("Authorized Signature", None), ("Statement Date", None)]) }}
+{% endblock %}

@@ -1,0 +1,30 @@
+{
+ "doctype": "DocType",
+ "name": "Audit Log",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "autoname": "hash",
+ "sort_field": "timestamp",
+ "sort_order": "DESC",
+ "in_create": 1,
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "timestamp", "fieldtype": "Datetime", "label": "Timestamp", "reqd": 1, "in_list_view": 1, "read_only": 1},
+  {"fieldname": "user", "fieldtype": "Link", "label": "User", "options": "User", "reqd": 1, "in_list_view": 1, "read_only": 1},
+  {"fieldname": "role", "fieldtype": "Small Text", "label": "Role(s)", "read_only": 1},
+  {"fieldname": "action", "fieldtype": "Data", "label": "Action", "reqd": 1, "in_list_view": 1, "read_only": 1},
+  {"fieldname": "reference_doctype", "fieldtype": "Data", "label": "Reference DocType", "in_list_view": 1, "read_only": 1},
+  {"fieldname": "reference_name", "fieldtype": "Data", "label": "Reference Name", "in_list_view": 1, "read_only": 1},
+  {"fieldname": "device_ip", "fieldtype": "Data", "label": "Device / IP", "read_only": 1},
+  {"fieldname": "justification", "fieldtype": "Small Text", "label": "Justification", "read_only": 1}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 0, "create": 1, "delete": 0},
+  {"role": "Fees Approver", "read": 1, "create": 1, "write": 0, "delete": 0},
+  {"role": "School Head", "read": 1},
+  {"role": "District Education Auditor/Inspector", "read": 1}
+ ]
+}

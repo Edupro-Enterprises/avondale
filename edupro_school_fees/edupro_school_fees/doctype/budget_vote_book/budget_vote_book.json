@@ -1,0 +1,24 @@
+{
+ "doctype": "DocType",
+ "name": "Budget Vote Book",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "autoname": "field:academic_year",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "academic_year", "fieldtype": "Link", "label": "Academic Year", "options": "Academic Year", "reqd": 1, "unique": 1, "in_list_view": 1},
+  {"fieldname": "workflow_state", "fieldtype": "Select", "label": "Status", "options": "Draft\nActive\nClosed", "default": "Draft", "read_only": 1, "in_list_view": 1}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1},
+  {"role": "Bursar", "read": 1, "write": 1, "create": 1},
+  {"role": "School Head", "read": 1, "write": 1},
+  {"role": "SDC Chairperson/Treasurer", "read": 1},
+  {"role": "District Education Auditor/Inspector", "read": 1}
+ ]
+}

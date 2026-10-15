@@ -1,0 +1,6 @@
+{
+  "title": "Accounting & Reporting",
+  "description": "The books a school keeps, the statements it produces, and how to read them.",
+  "order": 8,
+  "audience": ["bursar", "head", "auditor", "mopse"]
+}

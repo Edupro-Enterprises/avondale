@@ -1,0 +1,31 @@
+{
+ "doctype": "DocType",
+ "name": "Cashbook Payment",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 1,
+ "autoname": "naming_series:",
+ "sort_field": "posting_date",
+ "sort_order": "DESC",
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "naming_series", "fieldtype": "Select", "label": "Series", "options": "CBP-.YYYY.-.#####", "default": "CBP-.YYYY.-.#####"},
+  {"fieldname": "payment_voucher", "fieldtype": "Link", "label": "Payment Voucher", "options": "Payment Voucher", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "posting_date", "fieldtype": "Date", "label": "Posting Date", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "fund", "fieldtype": "Select", "label": "Fund", "options": "Fund A - General/Government\nFund B - SDC/SDA", "read_only": 1},
+  {"fieldname": "budget_line", "fieldtype": "Link", "label": "Budget Line", "options": "Budget Line", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "amount", "fieldtype": "Currency", "label": "Amount", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "currency", "fieldtype": "Select", "label": "Currency", "options": "ZiG\nUSD", "read_only": 1},
+  {"fieldname": "payment_method", "fieldtype": "Link", "label": "Payment Method", "options": "Payment Method", "read_only": 1},
+  {"fieldname": "remarks", "fieldtype": "Small Text", "label": "Remarks"}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 0, "create": 0, "delete": 0, "submit": 0, "cancel": 0},
+  {"role": "Bursar", "read": 1, "write": 1, "create": 1, "submit": 1},
+  {"role": "School Head", "read": 1},
+  {"role": "SDC Chairperson/Treasurer", "read": 1},
+  {"role": "District Education Auditor/Inspector", "read": 1}
+ ]
+}

@@ -1,0 +1,14 @@
+{# Usage: {% from "components/signatures.html" import signature_block %}
+   {{ signature_block([("Received By", receipt.received_by_name), ("Authorized Signature", None)]) }} #}
+{% macro signature_block(entries) %}
+<div class="signatures">
+  {% for role, name in entries %}
+  <div class="sig-cell">
+    <div class="sig-line">
+      {{ name or "" }}
+      <span class="sig-role">{{ role }}</span>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endmacro %}

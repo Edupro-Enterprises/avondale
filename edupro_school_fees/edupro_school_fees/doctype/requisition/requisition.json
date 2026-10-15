@@ -1,0 +1,32 @@
+{
+ "doctype": "DocType",
+ "name": "Requisition",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "autoname": "naming_series:",
+ "sort_field": "posting_date",
+ "sort_order": "DESC",
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "naming_series", "fieldtype": "Select", "label": "Series", "options": "REQ-.YYYY.-.#####", "default": "REQ-.YYYY.-.#####"},
+  {"fieldname": "requested_by", "fieldtype": "Link", "label": "Requested By", "options": "User", "default": "__user", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "fund", "fieldtype": "Select", "label": "Fund", "options": "Fund A - General/Government\nFund B - SDC/SDA", "default": "Fund A - General/Government", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "budget_line", "fieldtype": "Link", "label": "Budget Line", "options": "Budget Line", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "purpose", "fieldtype": "Small Text", "label": "Purpose", "reqd": 1},
+  {"fieldname": "posting_date", "fieldtype": "Date", "label": "Posting Date", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "items", "fieldtype": "Table", "label": "Items", "options": "Requisition Item", "reqd": 1},
+  {"fieldname": "total_estimated_amount", "fieldtype": "Currency", "label": "Total Estimated Amount", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "quotations", "fieldtype": "Table", "label": "Quotations (PRAZ: minimum 3 required)", "options": "Quotation Item"},
+  {"fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Open\nClosed", "default": "Open", "read_only": 1, "in_list_view": 1}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 0, "create": 0, "delete": 0},
+  {"role": "Bursar", "read": 1, "write": 1, "create": 1},
+  {"role": "School Head", "read": 1},
+  {"role": "SDC Chairperson/Treasurer", "read": 1},
+  {"role": "District Education Auditor/Inspector", "read": 1}
+ ]
+}

@@ -1,1 +1,0 @@
-exec(open('/home/frappe/frappe-bench/check_gl_against_voucher.py').read(), globals())

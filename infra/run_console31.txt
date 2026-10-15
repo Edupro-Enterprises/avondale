@@ -1,1 +1,0 @@
-exec(open('/home/frappe/frappe-bench/test_procurement2.py').read(), globals())

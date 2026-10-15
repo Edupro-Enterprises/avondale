@@ -1,0 +1,32 @@
+{
+ "doctype": "DocType",
+ "name": "Purchase Order",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "autoname": "naming_series:",
+ "sort_field": "posting_date",
+ "sort_order": "DESC",
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "naming_series", "fieldtype": "Select", "label": "Series", "options": "PO-.YYYY.-.#####", "default": "PO-.YYYY.-.#####"},
+  {"fieldname": "requisition", "fieldtype": "Link", "label": "Requisition", "options": "Requisition", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "fund", "fieldtype": "Select", "label": "Fund", "options": "Fund A - General/Government\nFund B - SDC/SDA", "read_only": 1, "fetch_from": "requisition.fund"},
+  {"fieldname": "budget_line", "fieldtype": "Link", "label": "Budget Line", "options": "Budget Line", "read_only": 1, "fetch_from": "requisition.budget_line", "in_list_view": 1},
+  {"fieldname": "vendor_name", "fieldtype": "Data", "label": "Vendor Name", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "amount", "fieldtype": "Currency", "label": "Amount", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "currency", "fieldtype": "Select", "label": "Currency", "options": "ZiG\nUSD", "read_only": 1},
+  {"fieldname": "is_sensitive_procurement", "fieldtype": "Check", "label": "Sensitive Procurement", "read_only": 1, "description": "Set automatically when amount is at or above School Setup's sensitive_procurement_threshold -- its Payment Voucher will need a District Education Auditor/Inspector co-signature."},
+  {"fieldname": "posting_date", "fieldtype": "Date", "label": "Posting Date", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Draft\nIssued\nCancelled", "default": "Draft", "in_list_view": 1}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 0, "create": 0, "delete": 0},
+  {"role": "Bursar", "read": 1, "write": 1, "create": 1},
+  {"role": "School Head", "read": 1},
+  {"role": "SDC Chairperson/Treasurer", "read": 1},
+  {"role": "District Education Auditor/Inspector", "read": 1}
+ ]
+}

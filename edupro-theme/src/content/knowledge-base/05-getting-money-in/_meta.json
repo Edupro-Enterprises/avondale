@@ -1,0 +1,6 @@
+{
+  "title": "Getting Money In",
+  "description": "Collections, receipting, banking, and reconciling what was collected against what the bank actually shows.",
+  "order": 5,
+  "audience": ["bursar", "cashier", "head", "auditor"]
+}

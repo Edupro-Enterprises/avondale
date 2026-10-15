@@ -1,0 +1,35 @@
+{
+ "doctype": "DocType",
+ "name": "Journal Entry",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 1,
+ "autoname": "naming_series:",
+ "sort_field": "posting_date",
+ "sort_order": "DESC",
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "naming_series", "fieldtype": "Select", "label": "Series", "options": "JE-.YYYY.-.#####", "default": "JE-.YYYY.-.#####"},
+  {"fieldname": "posting_date", "fieldtype": "Date", "label": "Posting Date", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "reference_doctype", "fieldtype": "Select", "label": "Reference Document Type", "options": "\nInvoice\nReceipt\nCashbook Payment\nPetty Cash Replenishment\nAsset\nCredit Note\nPeriod Lock\nApplicant", "in_list_view": 1},
+  {"fieldname": "reference_name", "fieldtype": "Dynamic Link", "label": "Reference Name", "options": "reference_doctype", "in_list_view": 1},
+  {"fieldname": "fund", "fieldtype": "Select", "label": "Fund", "options": "Fund A - General/Government\nFund B - SDC/SDA", "read_only": 1, "in_list_view": 1, "description": "Set automatically from the reference document's own fund (Cashbook Payment/Petty Cash Replenishment) -- defaults to Fund A for fee-side entries (Invoice/Receipt), which this app doesn't otherwise fund-tag. Used to keep SDC's GL access scoped to Fund B, same as every other procurement doctype."},
+  {"fieldname": "entries", "fieldtype": "Table", "label": "Entries", "options": "Journal Entry Account", "reqd": 1},
+  {"fieldname": "total_debit", "fieldtype": "Currency", "label": "Total Debit", "read_only": 1},
+  {"fieldname": "total_credit", "fieldtype": "Currency", "label": "Total Credit", "read_only": 1},
+  {"fieldname": "remarks", "fieldtype": "Small Text", "label": "Remarks"},
+  {"fieldname": "reversal_of", "fieldtype": "Link", "label": "Reversal Of", "options": "Journal Entry", "read_only": 1, "description": "Set only by reverse_journal_entry() -- this entry is the compensating reversal of the linked one."},
+  {"fieldname": "reversal_reason", "fieldtype": "Small Text", "label": "Reversal Reason", "read_only": 1},
+  {"fieldname": "reversed_by", "fieldtype": "Link", "label": "Reversed By", "options": "Journal Entry", "read_only": 1, "description": "Set only by reverse_journal_entry() -- points to the compensating entry that reversed this one, if any."}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 0, "create": 0, "delete": 0, "submit": 0, "cancel": 0},
+  {"role": "Bursar", "read": 1, "write": 1, "create": 1, "submit": 1},
+  {"role": "Fees Approver", "read": 1},
+  {"role": "School Head", "read": 1},
+  {"role": "SDC Chairperson/Treasurer", "read": 1},
+  {"role": "District Education Auditor/Inspector", "read": 1}
+ ]
+}

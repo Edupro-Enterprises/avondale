@@ -2,10 +2,10 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "edupro-portal",
+      "name": "edupro-theme",
       "runtimeExecutable": "cmd.exe",
-      "runtimeArgs": ["/c", "set PATH=C:\\Program Files\\nodejs;%PATH% && npm run dev --prefix portal"],
-      "port": 4321
+      "runtimeArgs": ["/c", "set PATH=C:\\Program Files\\nodejs;%PATH% && npm run dev --prefix edupro-theme"],
+      "port": 5173
     }
   ]
 }

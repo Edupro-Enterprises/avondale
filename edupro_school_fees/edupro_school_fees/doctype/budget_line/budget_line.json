@@ -1,0 +1,33 @@
+{
+ "doctype": "DocType",
+ "name": "Budget Line",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "autoname": "format:{budget_vote_book}-{vote_code}",
+ "sort_field": "modified",
+ "sort_order": "ASC",
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "budget_vote_book", "fieldtype": "Link", "label": "Budget Vote Book", "options": "Budget Vote Book", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "vote_code", "fieldtype": "Data", "label": "Vote Code", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "description", "fieldtype": "Small Text", "label": "Description", "reqd": 1},
+  {"fieldname": "fund", "fieldtype": "Select", "label": "Fund", "options": "Fund A - General/Government\nFund B - SDC/SDA", "default": "Fund A - General/Government", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "expense_account", "fieldtype": "Link", "label": "Expense Account", "options": "Account", "reqd": 1, "description": "Debited when a Payment Voucher against this vote is disbursed via Cashbook Payment."},
+  {"fieldname": "is_capital_project", "fieldtype": "Check", "label": "Capital Project", "default": "0", "description": "SDC capital infrastructure project vote (spec FR-RPT-11 Capital Project Register), distinct from ordinary recurrent spending."},
+  {"fieldname": "project_name", "fieldtype": "Data", "label": "Project Name", "description": "Only meaningful when Capital Project is checked."},
+  {"fieldname": "approved_budget", "fieldtype": "Currency", "label": "Approved Budget", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "committed_amount", "fieldtype": "Currency", "label": "Committed (Outstanding Encumbrances)", "read_only": 1, "default": "0"},
+  {"fieldname": "actual_spend", "fieldtype": "Currency", "label": "Actual Spend (Cumulative)", "read_only": 1, "default": "0"},
+  {"fieldname": "available_balance", "fieldtype": "Currency", "label": "Available Balance", "read_only": 1, "in_list_view": 1}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 0, "create": 0, "delete": 0},
+  {"role": "Bursar", "read": 1, "write": 1, "create": 1},
+  {"role": "School Head", "read": 1, "write": 1},
+  {"role": "SDC Chairperson/Treasurer", "read": 1},
+  {"role": "District Education Auditor/Inspector", "read": 1}
+ ]
+}

@@ -1,0 +1,27 @@
+{
+ "doctype": "DocType",
+ "name": "Petty Cash Float",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "autoname": "field:float_name",
+ "sort_field": "modified",
+ "sort_order": "ASC",
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "float_name", "fieldtype": "Data", "label": "Float Name", "reqd": 1, "unique": 1, "in_list_view": 1, "description": "e.g. Front Office Float"},
+  {"fieldname": "custodian", "fieldtype": "Link", "label": "Custodian", "options": "User", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "account", "fieldtype": "Link", "label": "Account", "options": "Account", "reqd": 1, "description": "The imprest cash account this float represents."},
+  {"fieldname": "float_amount", "fieldtype": "Currency", "label": "Float Amount (Imprest Ceiling)", "reqd": 1},
+  {"fieldname": "balance", "fieldtype": "Currency", "label": "Current Balance", "read_only": 1},
+  {"fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Active\nClosed", "default": "Active", "in_list_view": 1}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1},
+  {"role": "Bursar", "read": 1, "write": 1, "create": 1},
+  {"role": "School Head", "read": 1},
+  {"role": "District Education Auditor/Inspector", "read": 1}
+ ]
+}

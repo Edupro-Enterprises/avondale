@@ -1,1 +1,0 @@
-exec(open('/home/frappe/frappe-bench/cleanup_test_data.py').read(), globals())

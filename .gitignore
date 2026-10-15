@@ -1,13 +1,19 @@
-# Node / Astro (portal)
-portal/node_modules/
-portal/.astro/
-portal/dist/
-portal/npm-debug.log*
+# Node / Vite (edupro-theme) - it ships its own .gitignore too, this is
+# belt-and-suspenders for the root-level view of the tree.
+edupro-theme/node_modules/
+edupro-theme/dist/
+edupro-theme/npm-debug.log*
 
-# Python (edupro_financials)
-edupro_financials/**/__pycache__/
-edupro_financials/**/*.pyc
-edupro_financials/**/*.pyo
+# bench's `yarn install`/`bench build` runs against the repo root (it's the
+# bind-mounted Frappe app source) and writes these back via the bind mount -
+# not part of the actual app, just local build output.
+/node_modules/
+/yarn.lock
+
+# Python (edupro_school_fees)
+edupro_school_fees/**/__pycache__/
+edupro_school_fees/**/*.pyc
+edupro_school_fees/**/*.pyo
 
 # Frappe build artifacts (none should live in the app source, but just in case)
 **/*.egg-info/
@@ -20,6 +26,15 @@ infra/.env
 # no-student-data policy.
 infra/import/*
 !infra/import/.gitkeep
+
+# Full site backups (database/files dumps) from backup-site.ps1 - these
+# contain real student and financial data, same no-student-data policy as
+# infra/import above.
+infra/backups/*
+!infra/backups/.gitkeep
+
+# Operational logs from the infra scripts - not source, just local run history.
+infra/*.log
 
 # OS / editor cruft
 .DS_Store

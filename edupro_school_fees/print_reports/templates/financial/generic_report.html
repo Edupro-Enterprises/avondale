@@ -1,0 +1,68 @@
+{% extends "base/base_report.html" %}
+{% from "components/summary_cards.html" import summary_cards %}
+{% from "components/signatures.html" import signature_block %}
+
+{% block doc_title_tag %}{{ report.title }}{% endblock %}
+
+{% block extra_style %}
+<style>
+  /* Page size is set via wkhtmltopdf's own --page-size option (see
+     api.py's GENERIC_REPORT_PDF_OPTIONS) -- CSS @page size is a no-op on
+     wkhtmltopdf, confirmed live on the receipt template. */
+  .section-heading { font-size: 10pt; font-weight: bold; color: #16324a; margin: 14pt 0 4pt; }
+</style>
+{% endblock %}
+
+{% block header %}
+{% include "base/print_header.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="meta-strip">
+  <div class="meta-item"><strong>Period</strong>{{ report.period_label }}</div>
+</div>
+
+{% if report.summary_cards %}{{ summary_cards(report.summary_cards) }}{% endif %}
+
+{% for table in report.tables %}
+{% if table.heading %}<p class="section-heading">{{ table.heading }}</p>{% endif %}
+<table class="financial-table">
+  <thead>
+    <tr>
+      {% for col in table.columns %}
+      <th{% if loop.index0 in table.num_col_indexes %} class="num"{% endif %}>{{ col }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in table.rows %}
+    <tr>
+      {% for cell in row %}
+      <td{% if loop.index0 in table.num_col_indexes %} class="num"{% endif %}>{{ cell }}</td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+    {% if table.rows | length == 0 %}
+    <tr><td colspan="{{ table.columns | length }}" class="text-muted">No data for this period.</td></tr>
+    {% endif %}
+  </tbody>
+  {% if table.totals_row %}
+  <tfoot>
+    <tr>
+      {% for cell in table.totals_row %}
+      <td{% if loop.index0 in table.num_col_indexes %} class="num"{% endif %}>{{ cell }}</td>
+      {% endfor %}
+    </tr>
+  </tfoot>
+  {% endif %}
+</table>
+{% endfor %}
+
+{% for note in report.notes %}
+<p class="text-muted" style="font-size:8pt;margin-bottom:4pt;">{{ note }}</p>
+{% endfor %}
+{% endblock %}
+
+{% block signatures %}
+{{ signature_block([("Prepared By", None), ("Verified By", None), ("Approved By", None)]) }}
+{% endblock %}

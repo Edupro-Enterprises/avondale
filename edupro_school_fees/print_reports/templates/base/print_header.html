@@ -1,0 +1,28 @@
+{# Shared masthead: school branding (left) + document identity (right).
+   Expects: branding (dict from SchoolBrandingService), doc_title (str),
+   doc_meta (list of (label, value) tuples, e.g. [("Receipt No.", "RCPT-2026-00042")]). #}
+<div class="report-header">
+  <div class="brand-cell">
+    {% if branding.logo_data_uri %}
+    <img class="logo" src="{{ branding.logo_data_uri }}" alt="" />
+    {% endif %}
+    <p class="school-name">{{ branding.school_name or "School name not configured" }}</p>
+    <p class="school-meta">
+      {%- set meta_parts = [] -%}
+      {%- if branding.physical_address %}{% set _ = meta_parts.append(branding.physical_address) %}{% endif -%}
+      {%- if branding.telephone %}{% set _ = meta_parts.append(branding.telephone) %}{% endif -%}
+      {%- if branding.email %}{% set _ = meta_parts.append(branding.email) %}{% endif -%}
+      {{ meta_parts | join(" &nbsp;&middot;&nbsp; ") | safe }}
+      {%- if branding.registration_number %}<br />Reg. No: {{ branding.registration_number }}{% endif -%}
+      {%- if branding.emis_number %} &nbsp;&middot;&nbsp; EMIS: {{ branding.emis_number }}{% endif -%}
+    </p>
+  </div>
+  <div class="doc-cell">
+    <p class="doc-title">{{ doc_title }}</p>
+    <div class="doc-meta">
+      {% for label, value in doc_meta %}
+      {{ label }}: <strong>{{ value }}</strong><br />
+      {% endfor %}
+    </div>
+  </div>
+</div>

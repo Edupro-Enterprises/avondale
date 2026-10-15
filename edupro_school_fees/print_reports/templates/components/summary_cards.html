@@ -1,0 +1,16 @@
+{# Usage: {% from "components/summary_cards.html" import summary_cards %}
+   {{ summary_cards([("Total Billed", "$1,200.00"), ("Total Collected", "$950.00")]) }}
+   Renders in rows of at most 4 cards -- wkhtmltopdf's table-cell layout
+   doesn't wrap, so more than 4 would overflow the page width. #}
+{% macro summary_cards(entries) %}
+{% for chunk_start in range(0, entries | length, 4) %}
+<div class="summary-cards">
+  {% for label, value in entries[chunk_start:chunk_start + 4] %}
+  <div class="card">
+    <p class="label">{{ label }}</p>
+    <p class="value">{{ value }}</p>
+  </div>
+  {% endfor %}
+</div>
+{% endfor %}
+{% endmacro %}

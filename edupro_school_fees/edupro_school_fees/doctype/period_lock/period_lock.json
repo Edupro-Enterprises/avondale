@@ -1,0 +1,32 @@
+{
+ "doctype": "DocType",
+ "name": "Period Lock",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "autoname": "naming_series:",
+ "sort_field": "closing_date",
+ "sort_order": "DESC",
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "naming_series", "fieldtype": "Select", "label": "Series", "options": "PL-.YYYY.-.#####", "default": "PL-.YYYY.-.#####"},
+  {"fieldname": "academic_year", "fieldtype": "Link", "label": "Academic Year", "options": "Academic Year", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "closing_date", "fieldtype": "Date", "label": "Closing Date", "reqd": 1, "in_list_view": 1, "description": "No Journal Entry (via Invoice, Receipt, Cashbook Payment, Credit Note, etc.) can post on or before this date once Closed."},
+  {"fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Draft\nClosed", "default": "Draft", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "net_surplus_deficit", "fieldtype": "Currency", "label": "Net Surplus/(Deficit) Closed", "read_only": 1, "description": "Income minus Expense for the period since the last closed Period Lock (or inception, if none) -- transferred into the 'Accumulated Fund' Equity account by close_period()."},
+  {"fieldname": "closed_by", "fieldtype": "Link", "label": "Closed By", "options": "User", "read_only": 1},
+  {"fieldname": "closed_on", "fieldtype": "Datetime", "label": "Closed On", "read_only": 1},
+  {"fieldname": "audit_confirmation_document", "fieldtype": "Attach", "label": "Audit Confirmation Document", "description": "Evidence the period's records were reviewed before closing (e.g. an internal or District audit sign-off note). Attached by the District Education Auditor/Inspector via confirm_audit_for_period_lock() -- required before close_period() will run."},
+  {"fieldname": "audit_confirmed_by", "fieldtype": "Link", "label": "Audit Confirmed By", "options": "User", "read_only": 1},
+  {"fieldname": "audit_confirmed_on", "fieldtype": "Datetime", "label": "Audit Confirmed On", "read_only": 1}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 0, "create": 0, "delete": 0},
+  {"role": "Bursar", "read": 1, "write": 1, "create": 1},
+  {"role": "School Head", "read": 1, "write": 1},
+  {"role": "SDC Chairperson/Treasurer", "read": 1},
+  {"role": "District Education Auditor/Inspector", "read": 1}
+ ]
+}

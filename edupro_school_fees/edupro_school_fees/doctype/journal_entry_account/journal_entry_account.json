@@ -1,0 +1,17 @@
+{
+ "doctype": "DocType",
+ "name": "Journal Entry Account",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 1,
+ "issingle": 0,
+ "is_submittable": 0,
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "account", "fieldtype": "Link", "label": "Account", "options": "Account", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "debit", "fieldtype": "Currency", "label": "Debit", "default": "0", "in_list_view": 1},
+  {"fieldname": "credit", "fieldtype": "Currency", "label": "Credit", "default": "0", "in_list_view": 1},
+  {"fieldname": "exchange_rate", "fieldtype": "Float", "label": "Exchange Rate", "precision": "6", "default": "1", "read_only": 1, "description": "Rate to convert this row's account currency into ZiG (the base currency), snapshotted at posting time -- never recalculated."}
+ ],
+ "permissions": []
+}

@@ -1,0 +1,8 @@
+{
+    "app_name": "edupro_school_fees",
+    "title": "Edupro School Fees",
+    "description": "School Fees & Financial Statements System for Zimbabwean Schools",
+    "publisher": "Edupro",
+    "version": "0.0.1",
+    "frappe_version": "15"
+}

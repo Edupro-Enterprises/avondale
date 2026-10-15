@@ -1,0 +1,15 @@
+{
+ "doctype": "DocType",
+ "name": "Receipt Tender Line",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 1,
+ "issingle": 0,
+ "is_submittable": 0,
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "payment_method", "fieldtype": "Link", "label": "Payment Method", "options": "Payment Method", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "amount", "fieldtype": "Currency", "label": "Amount", "reqd": 1, "in_list_view": 1}
+ ],
+ "permissions": []
+}

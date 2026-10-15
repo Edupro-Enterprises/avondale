@@ -1,0 +1,30 @@
+{
+ "doctype": "DocType",
+ "name": "Bank Reconciliation",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "autoname": "format:{bank_account}-{period_end}",
+ "sort_field": "period_end",
+ "sort_order": "DESC",
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "bank_account", "fieldtype": "Link", "label": "Bank Account", "options": "Account", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "period_end", "fieldtype": "Date", "label": "Period End", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "balance_per_statement", "fieldtype": "Currency", "label": "Balance per Bank Statement", "reqd": 1},
+  {"fieldname": "balance_per_cashbook", "fieldtype": "Currency", "label": "Balance per Cashbook", "read_only": 1},
+  {"fieldname": "adjustments", "fieldtype": "Table", "label": "Reconciling Items", "options": "Bank Reconciliation Adjustment"},
+  {"fieldname": "reconciled_balance", "fieldtype": "Currency", "label": "Reconciled Balance", "read_only": 1},
+  {"fieldname": "variance", "fieldtype": "Currency", "label": "Variance", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "workflow_state", "fieldtype": "Select", "label": "Status", "options": "Draft\nPending Head Sign-Off\nReconciled\nDiscrepancy Flagged", "default": "Draft", "read_only": 1, "in_list_view": 1}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1},
+  {"role": "Bursar", "read": 1, "write": 1, "create": 1},
+  {"role": "School Head", "read": 1, "write": 1},
+  {"role": "SDC Chairperson/Treasurer", "read": 1},
+  {"role": "District Education Auditor/Inspector", "read": 1}
+ ]
+}

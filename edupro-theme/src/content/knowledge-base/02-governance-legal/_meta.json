@@ -1,0 +1,6 @@
+{
+  "title": "Governance & Legal Framework",
+  "description": "The Education Act, its regulations, and the other laws that govern how a school may raise, hold, and spend money.",
+  "order": 2,
+  "audience": ["sdc", "bursar", "head", "auditor", "mopse"]
+}

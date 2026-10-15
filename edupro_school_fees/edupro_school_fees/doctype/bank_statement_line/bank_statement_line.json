@@ -1,0 +1,21 @@
+{
+ "doctype": "DocType",
+ "name": "Bank Statement Line",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 1,
+ "issingle": 0,
+ "is_submittable": 0,
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "transaction_date", "fieldtype": "Date", "label": "Date", "in_list_view": 1},
+  {"fieldname": "description", "fieldtype": "Data", "label": "Description", "in_list_view": 1},
+  {"fieldname": "reference", "fieldtype": "Data", "label": "Reference", "in_list_view": 1},
+  {"fieldname": "amount", "fieldtype": "Currency", "label": "Amount", "in_list_view": 1},
+  {"fieldname": "match_status", "fieldtype": "Select", "label": "Match Status", "options": "Unmatched\nMatched\nManual Review\nPosted", "default": "Unmatched", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "matched_invoice", "fieldtype": "Link", "label": "Matched Invoice", "options": "Invoice", "read_only": 1},
+  {"fieldname": "matched_student", "fieldtype": "Link", "label": "Matched Student", "options": "Student", "read_only": 1},
+  {"fieldname": "receipt", "fieldtype": "Link", "label": "Posted Receipt", "options": "Receipt", "read_only": 1}
+ ],
+ "permissions": []
+}

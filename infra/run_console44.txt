@@ -1,1 +1,0 @@
-exec(open('/home/frappe/frappe-bench/check_reports_after_import.py').read(), globals())

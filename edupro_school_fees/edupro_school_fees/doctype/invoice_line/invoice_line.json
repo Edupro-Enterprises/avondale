@@ -1,0 +1,21 @@
+{
+ "doctype": "DocType",
+ "name": "Invoice Line",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 1,
+ "issingle": 0,
+ "is_submittable": 0,
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "fee_item", "fieldtype": "Link", "label": "Fee Item", "options": "Fee Item", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "description", "fieldtype": "Data", "label": "Description"},
+  {"fieldname": "currency", "fieldtype": "Select", "label": "Currency", "options": "ZiG\nUSD", "fetch_from": "fee_item.currency", "read_only": 1},
+  {"fieldname": "amount", "fieldtype": "Currency", "label": "Amount", "options": "currency", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "account", "fieldtype": "Link", "label": "Income Account", "options": "Account", "fetch_from": "fee_item.account"},
+  {"fieldname": "beneficiary_category", "fieldtype": "Link", "label": "Beneficiary Category", "options": "Beneficiary Category", "read_only": 1, "description": "Who this specific line is funded by -- resolved from the matching Fee Structure Item's own override, or the Fee Structure's overall category otherwise. Lets one invoice mix e.g. BEAM-funded and parent-funded lines."},
+  {"fieldname": "is_brought_forward", "fieldtype": "Check", "label": "Brought Forward", "read_only": 1, "default": "0", "description": "Set only by Invoice._carry_forward_prior_balances() -- represents debt already recognized as income on an earlier invoice, not a new charge."},
+  {"fieldname": "is_advance_applied", "fieldtype": "Check", "label": "Advance Applied", "read_only": 1, "default": "0", "description": "Set only by Invoice._apply_available_advance() -- a negative line consuming a student's unapplied advance Receipt(s), not a real fee item."}
+ ],
+ "permissions": []
+}

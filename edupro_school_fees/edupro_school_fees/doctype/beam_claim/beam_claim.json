@@ -1,0 +1,30 @@
+{
+ "doctype": "DocType",
+ "name": "BEAM Claim",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "autoname": "naming_series:",
+ "sort_field": "claim_date",
+ "sort_order": "DESC",
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "naming_series", "fieldtype": "Select", "label": "Series", "options": "BEAM-.YYYY.-.#####", "default": "BEAM-.YYYY.-.#####"},
+  {"fieldname": "student", "fieldtype": "Link", "label": "Student", "options": "Student", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "term", "fieldtype": "Link", "label": "Term Billed", "options": "Term", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "invoice", "fieldtype": "Link", "label": "Invoice", "options": "Invoice", "description": "The Invoice this claim is based on. When set, the amounts claimed are validated against what was actually billed on it, so a claim can't silently diverge from real invoiced figures."},
+  {"fieldname": "claim_date", "fieldtype": "Date", "label": "Claim Date", "default": "Today", "reqd": 1},
+  {"fieldname": "tuition_arrears_claimed", "fieldtype": "Currency", "label": "Tuition Arrears Claimed", "default": "0"},
+  {"fieldname": "sdc_levy_arrears_claimed", "fieldtype": "Currency", "label": "SDC Levy Arrears Claimed", "default": "0"},
+  {"fieldname": "treasury_amount_disbursed", "fieldtype": "Currency", "label": "Treasury Amount Disbursed", "default": "0", "description": "Updated as Treasury disbursement confirmations come in -- see 'Record Disbursement' on the reconciliation screen."},
+  {"fieldname": "disbursement_reference", "fieldtype": "Data", "label": "Disbursement Reference"}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1},
+  {"role": "Bursar", "read": 1, "write": 1, "create": 1},
+  {"role": "School Head", "read": 1},
+  {"role": "District Education Auditor/Inspector", "read": 1}
+ ]
+}

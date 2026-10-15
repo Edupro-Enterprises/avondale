@@ -1,0 +1,37 @@
+{
+ "doctype": "DocType",
+ "name": "Payment Voucher",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "autoname": "naming_series:",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "naming_series", "fieldtype": "Select", "label": "Series", "options": "PV-.YYYY.-.#####", "default": "PV-.YYYY.-.#####"},
+  {"fieldname": "purchase_order", "fieldtype": "Link", "label": "Purchase Order", "options": "Purchase Order", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "fund", "fieldtype": "Select", "label": "Fund", "options": "Fund A - General/Government\nFund B - SDC/SDA", "read_only": 1, "fetch_from": "purchase_order.fund"},
+  {"fieldname": "budget_line", "fieldtype": "Link", "label": "Budget Line", "options": "Budget Line", "read_only": 1, "fetch_from": "purchase_order.budget_line", "in_list_view": 1},
+  {"fieldname": "amount", "fieldtype": "Currency", "label": "Amount", "read_only": 1, "in_list_view": 1, "fetch_from": "purchase_order.amount"},
+  {"fieldname": "currency", "fieldtype": "Select", "label": "Currency", "options": "ZiG\nUSD", "read_only": 1, "fetch_from": "purchase_order.currency"},
+  {"fieldname": "is_sensitive_procurement", "fieldtype": "Check", "label": "Sensitive Procurement", "read_only": 1, "fetch_from": "purchase_order.is_sensitive_procurement", "description": "Requires a District Education Auditor/Inspector co-signature (see co_sign_sensitive_procurement) before School Head can give final approval."},
+  {"fieldname": "sensitive_co_signed_by", "fieldtype": "Link", "label": "Sensitive-Procurement Co-Signed By", "options": "User", "read_only": 1, "description": "Set only via co_sign_sensitive_procurement(), by a District Education Auditor/Inspector. Required before final approval when is_sensitive_procurement is set."},
+  {"fieldname": "sensitive_co_signed_on", "fieldtype": "Datetime", "label": "Sensitive-Procurement Co-Signed On", "read_only": 1},
+  {"fieldname": "payment_method", "fieldtype": "Link", "label": "Payment Method", "options": "Payment Method", "reqd": 1, "description": "Which account this will eventually pay from. Actual disbursement/ledger posting happens via Cashbook Payment."},
+  {"fieldname": "workflow_state", "fieldtype": "Select", "label": "Approval Status", "options": "Draft\nPending SDC Co-Approval\nPending School Head Approval\nApproved\nRejected", "default": "Draft", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "co_approved_by", "fieldtype": "Link", "label": "SDC Co-Approved By", "options": "User", "read_only": 1, "description": "Set automatically when the SDC Co-Approve action runs. Used to block the same person also performing School Head Approval."},
+  {"fieldname": "final_approved_by", "fieldtype": "Link", "label": "School Head Approved By", "options": "User", "read_only": 1},
+  {"fieldname": "approved_on", "fieldtype": "Datetime", "label": "Approved On", "read_only": 1},
+  {"fieldname": "disbursed", "fieldtype": "Check", "label": "Disbursed", "read_only": 1, "default": "0", "in_list_view": 1}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 0, "create": 0, "delete": 0},
+  {"role": "Bursar", "read": 1, "write": 1, "create": 1},
+  {"role": "School Head", "read": 1, "write": 1},
+  {"role": "SDC Chairperson/Treasurer", "read": 1, "write": 1},
+  {"role": "District Education Auditor/Inspector", "read": 1}
+ ]
+}

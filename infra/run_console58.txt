@@ -1,1 +1,0 @@
-exec(open('/home/frappe/frappe-bench/check_student_full.py').read(), globals())

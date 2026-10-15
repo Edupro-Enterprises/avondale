@@ -1,0 +1,32 @@
+{
+ "doctype": "DocType",
+ "name": "Account",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "autoname": "field:account_name",
+ "sort_field": "modified",
+ "sort_order": "ASC",
+ "is_tree": 1,
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "account_name", "fieldtype": "Data", "label": "Account Name", "reqd": 1, "unique": 1, "in_list_view": 1},
+  {"fieldname": "account_type", "fieldtype": "Select", "label": "Account Type", "options": "Asset\nLiability\nIncome\nExpense\nEquity", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "fund", "fieldtype": "Select", "label": "Fund", "options": "Fund A - General/Government\nFund B - SDC/SDA", "default": "Fund A - General/Government", "in_list_view": 1},
+  {"fieldname": "cost_center", "fieldtype": "Link", "label": "Cost Center / Department", "options": "Cost Center", "description": "Optional classification dimension (spec Data Model CostCenter entity) -- e.g. tag an expense account to Boarding, Sports, or a specific SDC capital project."},
+  {"fieldname": "currency", "fieldtype": "Select", "label": "Currency", "options": "ZiG\nUSD", "default": "ZiG", "reqd": 1},
+  {"fieldname": "parent_account", "fieldtype": "Link", "label": "Parent Account", "options": "Account"},
+  {"fieldname": "is_group", "fieldtype": "Check", "label": "Is Group"},
+  {"fieldname": "is_disabled", "fieldtype": "Check", "label": "Disabled"}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1},
+  {"role": "Bursar", "read": 1, "write": 0, "create": 0, "delete": 0},
+  {"role": "Fees Approver", "read": 1, "write": 0, "create": 0, "delete": 0},
+  {"role": "School Head", "read": 1},
+  {"role": "SDC Chairperson/Treasurer", "read": 1},
+  {"role": "District Education Auditor/Inspector", "read": 1}
+ ]
+}

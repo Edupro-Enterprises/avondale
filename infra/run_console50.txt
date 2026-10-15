@@ -1,1 +1,0 @@
-exec(open('/home/frappe/frappe-bench/adjust_opening_balances.py').read(), globals())

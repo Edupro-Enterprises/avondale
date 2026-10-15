@@ -1,0 +1,331 @@
+{
+    "actions": [],
+    "allow_rename": 1,
+    "autoname": "field:school_code",
+    "creation": "2024-01-01 00:00:00.000000",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+        "school_info_section",
+        "school_name",
+        "registration_number",
+        "emis_number",
+        "school_code",
+        "school_logo",
+        "address_section",
+        "physical_address",
+        "postal_address",
+        "contact_section",
+        "telephone",
+        "email",
+        "contact_person",
+        "location_section",
+        "district",
+        "region",
+        "legal_entity_type",
+        "banking_configuration_section",
+        "banking_configuration",
+        "fund_configuration_section",
+        "fund_a_name",
+        "fund_b_name",
+        "cash_office_section",
+        "cash_up_variance_threshold",
+        "procurement_section",
+        "sensitive_procurement_threshold",
+        "procurement_quote_bands",
+        "branding_section",
+        "primary_color",
+        "secondary_color",
+        "receipt_header",
+        "receipt_footer",
+        "statement_header",
+        "statement_footer",
+        "debtor_management_section",
+        "first_reminder_days",
+        "second_reminder_days",
+        "escalation_days",
+        "first_reminder_template",
+        "second_reminder_template"
+    ],
+    "fields": [
+        {
+            "fieldname": "school_info_section",
+            "fieldtype": "Section Break",
+            "label": "School Information"
+        },
+        {
+            "fieldname": "school_name",
+            "fieldtype": "Data",
+            "label": "School Name",
+            "reqd": 1
+        },
+        {
+            "fieldname": "registration_number",
+            "fieldtype": "Data",
+            "label": "Registration Number",
+            "reqd": 1
+        },
+        {
+            "fieldname": "emis_number",
+            "fieldtype": "Data",
+            "label": "EMIS Number",
+            "reqd": 1
+        },
+        {
+            "fieldname": "school_code",
+            "fieldtype": "Data",
+            "label": "School Code",
+            "reqd": 1,
+            "unique": 1
+        },
+        {
+            "fieldname": "school_logo",
+            "fieldtype": "Attach Image",
+            "label": "School Logo"
+        },
+        {
+            "fieldname": "address_section",
+            "fieldtype": "Section Break",
+            "label": "Address"
+        },
+        {
+            "fieldname": "physical_address",
+            "fieldtype": "Small Text",
+            "label": "Physical Address",
+            "reqd": 1
+        },
+        {
+            "fieldname": "postal_address",
+            "fieldtype": "Small Text",
+            "label": "Postal Address"
+        },
+        {
+            "fieldname": "contact_section",
+            "fieldtype": "Section Break",
+            "label": "Contact Information"
+        },
+        {
+            "fieldname": "telephone",
+            "fieldtype": "Data",
+            "label": "Telephone"
+        },
+        {
+            "fieldname": "email",
+            "fieldtype": "Data",
+            "label": "Email",
+            "options": "Email"
+        },
+        {
+            "fieldname": "contact_person",
+            "fieldtype": "Data",
+            "label": "Contact Person"
+        },
+        {
+            "fieldname": "location_section",
+            "fieldtype": "Section Break",
+            "label": "Location"
+        },
+        {
+            "fieldname": "district",
+            "fieldtype": "Link",
+            "label": "District",
+            "options": "District"
+        },
+        {
+            "fieldname": "region",
+            "fieldtype": "Link",
+            "label": "Region",
+            "options": "Region"
+        },
+        {
+            "fieldname": "legal_entity_type",
+            "fieldtype": "Select",
+            "label": "Legal Entity Type",
+            "options": "\nGovernment\nCouncil\nChurch\nPrivate Trust"
+        },
+        {
+            "fieldname": "banking_configuration_section",
+            "fieldtype": "Section Break",
+            "label": "Banking Configuration"
+        },
+        {
+            "fieldname": "banking_configuration",
+            "fieldtype": "Table",
+            "label": "Banking Configuration",
+            "options": "School Banking Configuration",
+            "reqd": 1
+        },
+        {
+            "fieldname": "fund_configuration_section",
+            "fieldtype": "Section Break",
+            "label": "Fund Configuration"
+        },
+        {
+            "fieldname": "fund_a_name",
+            "fieldtype": "Data",
+            "label": "Fund A Name",
+            "default": "Tuition/Government Account"
+        },
+        {
+            "fieldname": "fund_b_name",
+            "fieldtype": "Data",
+            "label": "Fund B Name",
+            "default": "SDC/SDA Project Account"
+        },
+        {
+            "fieldname": "cash_office_section",
+            "fieldtype": "Section Break",
+            "label": "Cash Office Controls"
+        },
+        {
+            "fieldname": "cash_up_variance_threshold",
+            "fieldtype": "Currency",
+            "label": "Daily Cash-Up Variance Threshold",
+            "default": "5",
+            "description": "A cashier's daily cash-up is flagged, and they are locked out of recording new receipts, once any payment method's variance exceeds this amount (in that method's own currency)."
+        },
+        {
+            "fieldname": "procurement_section",
+            "fieldtype": "Section Break",
+            "label": "Procurement Controls"
+        },
+        {
+            "fieldname": "sensitive_procurement_threshold",
+            "fieldtype": "Currency",
+            "label": "Sensitive Procurement Threshold",
+            "default": "5000",
+            "description": "A Purchase Order at or above this amount is flagged sensitive -- its Payment Voucher needs a District Education Auditor/Inspector co-signature (see co_sign_sensitive_procurement) before the School Head can give final approval."
+        },
+        {
+            "fieldname": "procurement_quote_bands",
+            "fieldtype": "Table",
+            "label": "Procurement Quote Bands",
+            "options": "Procurement Quote Band",
+            "description": "How many competitive quotations a Requisition needs before a Purchase Order can be issued, banded by its total estimated amount -- the highest band whose minimum the requisition meets or exceeds applies. Leave empty to keep the PRAZ baseline of 3 quotations regardless of amount."
+        },
+        {
+            "fieldname": "branding_section",
+            "fieldtype": "Section Break",
+            "label": "Branding"
+        },
+        {
+            "fieldname": "primary_color",
+            "fieldtype": "Color",
+            "label": "Primary Color"
+        },
+        {
+            "fieldname": "secondary_color",
+            "fieldtype": "Color",
+            "label": "Secondary Color"
+        },
+        {
+            "fieldname": "receipt_header",
+            "fieldtype": "Small Text",
+            "label": "Receipt Header"
+        },
+        {
+            "fieldname": "receipt_footer",
+            "fieldtype": "Small Text",
+            "label": "Receipt Footer"
+        },
+        {
+            "fieldname": "statement_header",
+            "fieldtype": "Small Text",
+            "label": "Statement Header"
+        },
+        {
+            "fieldname": "statement_footer",
+            "fieldtype": "Small Text",
+            "label": "Statement Footer"
+        },
+        {
+            "fieldname": "debtor_management_section",
+            "fieldtype": "Section Break",
+            "label": "Debtor Management"
+        },
+        {
+            "fieldname": "first_reminder_days",
+            "fieldtype": "Int",
+            "label": "First Reminder (Days Overdue)",
+            "default": "7",
+            "description": "A guardian gets a first, milder reminder once a Debtor Case has been overdue this many days."
+        },
+        {
+            "fieldname": "second_reminder_days",
+            "fieldtype": "Int",
+            "label": "Second Reminder (Days Overdue)",
+            "default": "30",
+            "description": "A firmer follow-up reminder once overdue this many days."
+        },
+        {
+            "fieldname": "escalation_days",
+            "fieldtype": "Int",
+            "label": "Escalate After (Days Overdue)",
+            "default": "90",
+            "description": "A case is automatically moved to Escalated and its debt collection notice sent once overdue this many days."
+        },
+        {
+            "fieldname": "first_reminder_template",
+            "fieldtype": "Link",
+            "label": "First Reminder Template",
+            "options": "Communication Template",
+            "description": "Optional. Leave blank to use the default reminder wording."
+        },
+        {
+            "fieldname": "second_reminder_template",
+            "fieldtype": "Link",
+            "label": "Second Reminder Template",
+            "options": "Communication Template",
+            "description": "Optional. Leave blank to use the default reminder wording."
+        }
+    ],
+    "links": [],
+    "modified": "2024-01-01 00:00:00.000000",
+    "modified_by": "Administrator",
+    "module": "Edupro School Fees",
+    "name": "School Setup",
+    "naming_rule": "By fieldname",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "share": 1,
+            "write": 1
+        },
+        {
+            "create": 0,
+            "delete": 0,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "School Head",
+            "share": 0,
+            "write": 1
+        },
+        {
+            "create": 0,
+            "delete": 0,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "Bursar",
+            "share": 0,
+            "write": 1
+        }
+    ],
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": [],
+    "track_changes": 1
+}

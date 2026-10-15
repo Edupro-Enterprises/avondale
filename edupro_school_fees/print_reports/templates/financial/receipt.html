@@ -1,0 +1,93 @@
+{% extends "base/base_report.html" %}
+{% from "components/signatures.html" import signature_block %}
+
+{% block doc_title_tag %}Official Receipt {{ receipt.name }}{% endblock %}
+
+{% block extra_style %}
+<style>
+  /* Page size for this A5 slip is set via wkhtmltopdf's own --page-size
+     option (see api.py's RECEIPT_PDF_OPTIONS), not CSS `@page size` --
+     confirmed live that wkhtmltopdf ignores the CSS property and falls
+     back to its own default page size otherwise. */
+  .page { padding: 8mm; }
+  /* The shared header's 65/35 brand/doc split is tuned for a full A4
+     report page -- on this narrow A5 slip it wraps "RCPT-2026-00042"
+     onto two lines, so this template alone tightens it. */
+  .report-header .brand-cell { width: 55%; }
+  .report-header .doc-cell { width: 45%; }
+  .report-header .school-name { font-size: 12pt; }
+  .report-header .doc-title { font-size: 11pt; }
+  .report-header .doc-meta { font-size: 7.5pt; }
+  .report-header .school-meta { font-size: 7pt; }
+  .kv-table { width: 100%; border-collapse: collapse; margin-bottom: 10pt; font-size: 9.5pt; }
+  .kv-table td { padding: 3pt 0; vertical-align: top; }
+  .kv-table td.label { color: #666; width: 42%; }
+  .kv-table td.value { font-weight: bold; }
+  .amount-block { text-align: center; border: 1pt solid #16324a; padding: 10pt; margin: 12pt 0; }
+  .amount-block .label { font-size: 8pt; text-transform: uppercase; letter-spacing: 0.5pt; color: #666; margin: 0; }
+  .amount-block .amount { font-size: 22pt; font-weight: bold; color: #16324a; margin: 2pt 0 0; }
+  .balance-row td.value { color: #16324a; }
+  .verify-block { display: table; width: 100%; margin-top: 10pt; border-top: 0.5pt solid #d8dee3; padding-top: 8pt; }
+  .verify-block .qr-cell { display: table-cell; width: 60pt; vertical-align: top; }
+  .verify-block .qr-cell img { width: 50pt; height: 50pt; }
+  .verify-block .qr-cell .qr-caption { font-size: 6.5pt; color: #888; margin-top: 2pt; text-align: center; }
+  .verify-block .note-cell { display: table-cell; vertical-align: middle; padding-left: 10pt; font-size: 7.5pt; color: #777; }
+</style>
+{% endblock %}
+
+{% block header %}
+{% include "base/print_header.html" %}
+{% endblock %}
+
+{% block content %}
+{% if is_reprint %}
+<p class="watermark-reprint">Duplicate &mdash; Reprinted Copy</p>
+{% endif %}
+{% if receipt.status == "Reversed" %}
+<p class="watermark-reversed">This receipt has been reversed &mdash; see reversal reason below</p>
+{% endif %}
+
+<table class="kv-table">
+  <tr><td class="label">Student</td><td class="value">{{ receipt.student_name }}</td></tr>
+  <tr><td class="label">Student ID</td><td class="value">{{ receipt.student }}</td></tr>
+  {% if receipt.grade %}<tr><td class="label">Grade / Class</td><td class="value">{{ receipt.grade }}</td></tr>{% endif %}
+  {% if receipt.payer_name %}<tr><td class="label">Parent / Guardian</td><td class="value">{{ receipt.payer_name }}</td></tr>{% endif %}
+  <tr><td class="label">Payment Method</td><td class="value">{{ receipt.payment_method }}</td></tr>
+  {% if receipt.external_reference %}<tr><td class="label">Transaction Reference</td><td class="value">{{ receipt.external_reference }}</td></tr>{% endif %}
+  <tr><td class="label">Received By</td><td class="value">{{ receipt.received_by_name }}</td></tr>
+  <tr class="balance-row"><td class="label">Balance After Payment</td><td class="value">{{ receipt.outstanding_balance_display }}</td></tr>
+</table>
+
+<div class="amount-block">
+  <p class="label">Amount Paid</p>
+  <p class="amount">{{ receipt.amount_display }}</p>
+</div>
+
+{% if receipt.allocations %}
+<table class="financial-table">
+  <thead><tr><th>Fee Item</th><th class="num">Allocated</th></tr></thead>
+  <tbody>
+    {% for line in receipt.allocations %}
+    <tr><td>{{ line.description }}</td><td class="num">{{ line.amount_display }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+<div class="verify-block">
+  <div class="qr-cell">
+    {% if qr_data_uri %}
+    <img src="{{ qr_data_uri }}" alt="" />
+    <p class="qr-caption">Scan to verify</p>
+    {% endif %}
+  </div>
+  <div class="note-cell">
+    A printed or emailed copy of this receipt is only valid proof of payment if it verifies against the school's own records.
+    {% if receipt.status == "Reversed" %}<br /><strong>This receipt's payment has been reversed and is no longer valid.</strong>{% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block signatures %}
+{{ signature_block([("Received By", receipt.received_by_name), ("Authorized Signature", None)]) }}
+{% endblock %}

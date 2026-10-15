@@ -1,0 +1,718 @@
+[
+ {
+  "creation": "2026-09-10 00:00:00.000000",
+  "docstatus": 0,
+  "doctype": "Workflow",
+  "document_type": "Fee Structure",
+  "idx": 0,
+  "is_active": 1,
+  "modified": "2026-09-10 00:00:00.000000",
+  "modified_by": "Administrator",
+  "name": "Fee Structure Workflow",
+  "owner": "Administrator",
+  "send_email_alert": 0,
+  "states": [
+   {
+    "allow_edit": "Bursar",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Fee Structure Workflow",
+    "parentfield": "states",
+    "state": "Draft"
+   },
+   {
+    "allow_edit": "Fees Approver",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Fee Structure Workflow",
+    "parentfield": "states",
+    "state": "Pending Approval"
+   },
+   {
+    "allow_edit": "Fees Approver",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Fee Structure Workflow",
+    "parentfield": "states",
+    "state": "Approved"
+   },
+   {
+    "allow_edit": "Bursar",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Fee Structure Workflow",
+    "parentfield": "states",
+    "state": "Rejected"
+   }
+  ],
+  "transitions": [
+   {
+    "action": "Submit for Approval",
+    "allow_self_approval": 1,
+    "allowed": "Bursar",
+    "next_state": "Pending Approval",
+    "parent": "Fee Structure Workflow",
+    "parentfield": "transitions",
+    "state": "Draft"
+   },
+   {
+    "action": "Approve",
+    "allow_self_approval": 0,
+    "allowed": "Fees Approver",
+    "next_state": "Approved",
+    "parent": "Fee Structure Workflow",
+    "parentfield": "transitions",
+    "state": "Pending Approval"
+   },
+   {
+    "action": "Reject",
+    "allow_self_approval": 0,
+    "allowed": "Fees Approver",
+    "next_state": "Rejected",
+    "parent": "Fee Structure Workflow",
+    "parentfield": "transitions",
+    "state": "Pending Approval"
+   }
+  ],
+  "workflow_name": "Fee Structure Workflow",
+  "workflow_state_field": "workflow_state"
+ },
+ {
+  "creation": "2025-01-01 00:00:00.000000",
+  "docstatus": 0,
+  "doctype": "Workflow",
+  "document_type": "Academic Year",
+  "idx": 0,
+  "is_active": 1,
+  "modified": "2025-01-01 00:00:00.000000",
+  "modified_by": "Administrator",
+  "name": "Academic Year Workflow",
+  "owner": "Administrator",
+  "send_email_alert": 0,
+  "states": [
+   {
+    "allow_edit": "All",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Academic Year Workflow",
+    "parentfield": "states",
+    "state": "Draft"
+   },
+   {
+    "allow_edit": "School Head",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Academic Year Workflow",
+    "parentfield": "states",
+    "state": "Active"
+   },
+   {
+    "allow_edit": "School Head",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Academic Year Workflow",
+    "parentfield": "states",
+    "state": "Closed"
+   }
+  ],
+  "transitions": [
+   {
+    "action": "Activate",
+    "allow_self_approval": 1,
+    "allowed": "School Head",
+    "next_state": "Active",
+    "parent": "Academic Year Workflow",
+    "parentfield": "transitions",
+    "state": "Draft"
+   },
+   {
+    "action": "Close",
+    "allow_self_approval": 1,
+    "allowed": "School Head",
+    "next_state": "Closed",
+    "parent": "Academic Year Workflow",
+    "parentfield": "transitions",
+    "state": "Active"
+   },
+   {
+    "action": "Reopen",
+    "allow_self_approval": 1,
+    "allowed": "School Head",
+    "next_state": "Draft",
+    "parent": "Academic Year Workflow",
+    "parentfield": "transitions",
+    "state": "Closed"
+   }
+  ],
+  "workflow_name": "Academic Year Workflow",
+  "workflow_state_field": "workflow_state"
+ },
+ {
+  "creation": "2025-01-01 00:00:00.000000",
+  "docstatus": 0,
+  "doctype": "Workflow",
+  "document_type": "Term",
+  "idx": 0,
+  "is_active": 1,
+  "modified": "2025-01-01 00:00:00.000000",
+  "modified_by": "Administrator",
+  "name": "Term Workflow",
+  "owner": "Administrator",
+  "send_email_alert": 0,
+  "states": [
+   {
+    "allow_edit": "All",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Term Workflow",
+    "parentfield": "states",
+    "state": "Draft"
+   },
+   {
+    "allow_edit": "School Head",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Term Workflow",
+    "parentfield": "states",
+    "state": "Active"
+   },
+   {
+    "allow_edit": "School Head",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Term Workflow",
+    "parentfield": "states",
+    "state": "Closed"
+   }
+  ],
+  "transitions": [
+   {
+    "action": "Activate",
+    "allow_self_approval": 1,
+    "allowed": "School Head",
+    "next_state": "Active",
+    "parent": "Term Workflow",
+    "parentfield": "transitions",
+    "state": "Draft"
+   },
+   {
+    "action": "Close",
+    "allow_self_approval": 1,
+    "allowed": "School Head",
+    "next_state": "Closed",
+    "parent": "Term Workflow",
+    "parentfield": "transitions",
+    "state": "Active"
+   },
+   {
+    "action": "Reopen",
+    "allow_self_approval": 1,
+    "allowed": "School Head",
+    "next_state": "Draft",
+    "parent": "Term Workflow",
+    "parentfield": "transitions",
+    "state": "Closed"
+   }
+  ],
+  "workflow_name": "Term Workflow",
+  "workflow_state_field": "workflow_state"
+ },
+ {
+  "creation": "2026-09-10 00:00:00.000000",
+  "docstatus": 0,
+  "doctype": "Workflow",
+  "document_type": "Debtor Case",
+  "idx": 0,
+  "is_active": 1,
+  "modified": "2026-09-10 00:00:00.000000",
+  "modified_by": "Administrator",
+  "name": "Debtor Case Workflow",
+  "owner": "Administrator",
+  "send_email_alert": 0,
+  "states": [
+   {
+    "allow_edit": "Bursar",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Debtor Case Workflow",
+    "parentfield": "states",
+    "state": "Open"
+   },
+   {
+    "allow_edit": "Bursar",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Debtor Case Workflow",
+    "parentfield": "states",
+    "state": "Payment Plan Active"
+   },
+   {
+    "allow_edit": "School Head",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Debtor Case Workflow",
+    "parentfield": "states",
+    "state": "Escalated"
+   },
+   {
+    "allow_edit": "Bursar",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Debtor Case Workflow",
+    "parentfield": "states",
+    "state": "Resolved"
+   },
+   {
+    "allow_edit": "School Head",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Debtor Case Workflow",
+    "parentfield": "states",
+    "state": "Legal"
+   }
+  ],
+  "transitions": [
+   {
+    "action": "Start Payment Plan",
+    "allow_self_approval": 1,
+    "allowed": "Bursar",
+    "next_state": "Payment Plan Active",
+    "parent": "Debtor Case Workflow",
+    "parentfield": "transitions",
+    "state": "Open"
+   },
+   {
+    "action": "Escalate",
+    "allow_self_approval": 1,
+    "allowed": "Bursar",
+    "next_state": "Escalated",
+    "parent": "Debtor Case Workflow",
+    "parentfield": "transitions",
+    "state": "Open"
+   },
+   {
+    "action": "Escalate",
+    "allow_self_approval": 1,
+    "allowed": "School Head",
+    "next_state": "Escalated",
+    "parent": "Debtor Case Workflow",
+    "parentfield": "transitions",
+    "state": "Open"
+   },
+   {
+    "action": "Resolve",
+    "allow_self_approval": 1,
+    "allowed": "Bursar",
+    "next_state": "Resolved",
+    "parent": "Debtor Case Workflow",
+    "parentfield": "transitions",
+    "state": "Open"
+   },
+   {
+    "action": "Escalate",
+    "allow_self_approval": 1,
+    "allowed": "Bursar",
+    "next_state": "Escalated",
+    "parent": "Debtor Case Workflow",
+    "parentfield": "transitions",
+    "state": "Payment Plan Active"
+   },
+   {
+    "action": "Escalate",
+    "allow_self_approval": 1,
+    "allowed": "School Head",
+    "next_state": "Escalated",
+    "parent": "Debtor Case Workflow",
+    "parentfield": "transitions",
+    "state": "Payment Plan Active"
+   },
+   {
+    "action": "Resolve",
+    "allow_self_approval": 1,
+    "allowed": "Bursar",
+    "next_state": "Resolved",
+    "parent": "Debtor Case Workflow",
+    "parentfield": "transitions",
+    "state": "Payment Plan Active"
+   },
+   {
+    "action": "Refer to Legal",
+    "allow_self_approval": 0,
+    "allowed": "School Head",
+    "next_state": "Legal",
+    "parent": "Debtor Case Workflow",
+    "parentfield": "transitions",
+    "state": "Escalated"
+   },
+   {
+    "action": "Resolve",
+    "allow_self_approval": 1,
+    "allowed": "School Head",
+    "next_state": "Resolved",
+    "parent": "Debtor Case Workflow",
+    "parentfield": "transitions",
+    "state": "Escalated"
+   },
+   {
+    "action": "Resolve",
+    "allow_self_approval": 1,
+    "allowed": "Bursar",
+    "next_state": "Resolved",
+    "parent": "Debtor Case Workflow",
+    "parentfield": "transitions",
+    "state": "Escalated"
+   },
+   {
+    "action": "Resolve",
+    "allow_self_approval": 1,
+    "allowed": "School Head",
+    "next_state": "Resolved",
+    "parent": "Debtor Case Workflow",
+    "parentfield": "transitions",
+    "state": "Legal"
+   },
+   {
+    "action": "Reopen",
+    "allow_self_approval": 1,
+    "allowed": "School Head",
+    "next_state": "Open",
+    "parent": "Debtor Case Workflow",
+    "parentfield": "transitions",
+    "state": "Resolved"
+   }
+  ],
+  "workflow_name": "Debtor Case Workflow",
+  "workflow_state_field": "workflow_state"
+ },
+ {
+  "creation": "2026-09-10 00:00:00.000000",
+  "docstatus": 0,
+  "doctype": "Workflow",
+  "document_type": "Payment Voucher",
+  "idx": 0,
+  "is_active": 1,
+  "modified": "2026-09-10 00:00:00.000000",
+  "modified_by": "Administrator",
+  "name": "Payment Voucher Workflow",
+  "owner": "Administrator",
+  "send_email_alert": 0,
+  "states": [
+   {
+    "allow_edit": "Bursar",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Payment Voucher Workflow",
+    "parentfield": "states",
+    "state": "Draft"
+   },
+   {
+    "allow_edit": "SDC Chairperson/Treasurer",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Payment Voucher Workflow",
+    "parentfield": "states",
+    "state": "Pending SDC Co-Approval"
+   },
+   {
+    "allow_edit": "School Head",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Payment Voucher Workflow",
+    "parentfield": "states",
+    "state": "Pending School Head Approval"
+   },
+   {
+    "allow_edit": "School Head",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Payment Voucher Workflow",
+    "parentfield": "states",
+    "state": "Approved"
+   },
+   {
+    "allow_edit": "Bursar",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Payment Voucher Workflow",
+    "parentfield": "states",
+    "state": "Rejected"
+   }
+  ],
+  "transitions": [
+   {
+    "action": "Submit for Approval",
+    "allow_self_approval": 1,
+    "allowed": "Bursar",
+    "next_state": "Pending SDC Co-Approval",
+    "parent": "Payment Voucher Workflow",
+    "parentfield": "transitions",
+    "state": "Draft"
+   },
+   {
+    "action": "Submit for Approval (Fund A)",
+    "allow_self_approval": 1,
+    "allowed": "Bursar",
+    "next_state": "Pending School Head Approval",
+    "parent": "Payment Voucher Workflow",
+    "parentfield": "transitions",
+    "state": "Draft"
+   },
+   {
+    "action": "Co-Approve",
+    "allow_self_approval": 0,
+    "allowed": "SDC Chairperson/Treasurer",
+    "next_state": "Pending School Head Approval",
+    "parent": "Payment Voucher Workflow",
+    "parentfield": "transitions",
+    "state": "Pending SDC Co-Approval"
+   },
+   {
+    "action": "Reject",
+    "allow_self_approval": 0,
+    "allowed": "SDC Chairperson/Treasurer",
+    "next_state": "Rejected",
+    "parent": "Payment Voucher Workflow",
+    "parentfield": "transitions",
+    "state": "Pending SDC Co-Approval"
+   },
+   {
+    "action": "Approve",
+    "allow_self_approval": 0,
+    "allowed": "School Head",
+    "next_state": "Approved",
+    "parent": "Payment Voucher Workflow",
+    "parentfield": "transitions",
+    "state": "Pending School Head Approval"
+   },
+   {
+    "action": "Reject",
+    "allow_self_approval": 0,
+    "allowed": "School Head",
+    "next_state": "Rejected",
+    "parent": "Payment Voucher Workflow",
+    "parentfield": "transitions",
+    "state": "Pending School Head Approval"
+   }
+  ],
+  "workflow_name": "Payment Voucher Workflow",
+  "workflow_state_field": "workflow_state"
+ },
+ {
+  "creation": "2026-09-10 00:00:00.000000",
+  "docstatus": 0,
+  "doctype": "Workflow",
+  "document_type": "Budget Vote Book",
+  "idx": 0,
+  "is_active": 1,
+  "modified": "2026-09-10 00:00:00.000000",
+  "modified_by": "Administrator",
+  "name": "Budget Vote Book Workflow",
+  "owner": "Administrator",
+  "send_email_alert": 0,
+  "states": [
+   {
+    "allow_edit": "Bursar",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Budget Vote Book Workflow",
+    "parentfield": "states",
+    "state": "Draft"
+   },
+   {
+    "allow_edit": "School Head",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Budget Vote Book Workflow",
+    "parentfield": "states",
+    "state": "Active"
+   },
+   {
+    "allow_edit": "School Head",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Budget Vote Book Workflow",
+    "parentfield": "states",
+    "state": "Closed"
+   }
+  ],
+  "transitions": [
+   {
+    "action": "Activate",
+    "allow_self_approval": 1,
+    "allowed": "School Head",
+    "next_state": "Active",
+    "parent": "Budget Vote Book Workflow",
+    "parentfield": "transitions",
+    "state": "Draft"
+   },
+   {
+    "action": "Close",
+    "allow_self_approval": 1,
+    "allowed": "School Head",
+    "next_state": "Closed",
+    "parent": "Budget Vote Book Workflow",
+    "parentfield": "transitions",
+    "state": "Active"
+   },
+   {
+    "action": "Reopen",
+    "allow_self_approval": 1,
+    "allowed": "School Head",
+    "next_state": "Draft",
+    "parent": "Budget Vote Book Workflow",
+    "parentfield": "transitions",
+    "state": "Closed"
+   }
+  ],
+  "workflow_name": "Budget Vote Book Workflow",
+  "workflow_state_field": "workflow_state"
+ },
+ {
+  "creation": "2026-09-10 00:00:00.000000",
+  "docstatus": 0,
+  "doctype": "Workflow",
+  "document_type": "Bank Reconciliation",
+  "idx": 0,
+  "is_active": 1,
+  "modified": "2026-09-10 00:00:00.000000",
+  "modified_by": "Administrator",
+  "name": "Bank Reconciliation Workflow",
+  "owner": "Administrator",
+  "send_email_alert": 0,
+  "states": [
+   {
+    "allow_edit": "Bursar",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Bank Reconciliation Workflow",
+    "parentfield": "states",
+    "state": "Draft"
+   },
+   {
+    "allow_edit": "School Head",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Bank Reconciliation Workflow",
+    "parentfield": "states",
+    "state": "Pending Head Sign-Off"
+   },
+   {
+    "allow_edit": "School Head",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Bank Reconciliation Workflow",
+    "parentfield": "states",
+    "state": "Reconciled"
+   },
+   {
+    "allow_edit": "Bursar",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Bank Reconciliation Workflow",
+    "parentfield": "states",
+    "state": "Discrepancy Flagged"
+   }
+  ],
+  "transitions": [
+   {
+    "action": "Submit for Sign-Off",
+    "allow_self_approval": 1,
+    "allowed": "Bursar",
+    "next_state": "Pending Head Sign-Off",
+    "parent": "Bank Reconciliation Workflow",
+    "parentfield": "transitions",
+    "state": "Draft"
+   },
+   {
+    "action": "Sign Off",
+    "allow_self_approval": 0,
+    "allowed": "School Head",
+    "next_state": "Reconciled",
+    "parent": "Bank Reconciliation Workflow",
+    "parentfield": "transitions",
+    "state": "Pending Head Sign-Off"
+   },
+   {
+    "action": "Flag Discrepancy",
+    "allow_self_approval": 0,
+    "allowed": "School Head",
+    "next_state": "Discrepancy Flagged",
+    "parent": "Bank Reconciliation Workflow",
+    "parentfield": "transitions",
+    "state": "Pending Head Sign-Off"
+   },
+   {
+    "action": "Resubmit",
+    "allow_self_approval": 1,
+    "allowed": "Bursar",
+    "next_state": "Pending Head Sign-Off",
+    "parent": "Bank Reconciliation Workflow",
+    "parentfield": "transitions",
+    "state": "Discrepancy Flagged"
+   }
+  ],
+  "workflow_name": "Bank Reconciliation Workflow",
+  "workflow_state_field": "workflow_state"
+ },
+ {
+  "creation": "2026-09-12 00:00:00.000000",
+  "docstatus": 0,
+  "doctype": "Workflow",
+  "document_type": "Credit Note",
+  "idx": 0,
+  "is_active": 1,
+  "modified": "2026-09-12 00:00:00.000000",
+  "modified_by": "Administrator",
+  "name": "Credit Note Workflow",
+  "owner": "Administrator",
+  "send_email_alert": 0,
+  "states": [
+   {
+    "allow_edit": "Bursar",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Credit Note Workflow",
+    "parentfield": "states",
+    "state": "Draft"
+   },
+   {
+    "allow_edit": "School Head",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Credit Note Workflow",
+    "parentfield": "states",
+    "state": "Approved"
+   },
+   {
+    "allow_edit": "School Head",
+    "doc_status": 0,
+    "is_optional_state": 0,
+    "parent": "Credit Note Workflow",
+    "parentfield": "states",
+    "state": "Rejected"
+   }
+  ],
+  "transitions": [
+   {
+    "action": "Submit for Approval",
+    "allow_self_approval": 0,
+    "allowed": "School Head",
+    "next_state": "Approved",
+    "parent": "Credit Note Workflow",
+    "parentfield": "transitions",
+    "state": "Draft"
+   },
+   {
+    "action": "Reject",
+    "allow_self_approval": 0,
+    "allowed": "School Head",
+    "next_state": "Rejected",
+    "parent": "Credit Note Workflow",
+    "parentfield": "transitions",
+    "state": "Draft"
+   }
+  ],
+  "workflow_name": "Credit Note Workflow",
+  "workflow_state_field": "workflow_state"
+ }
+]

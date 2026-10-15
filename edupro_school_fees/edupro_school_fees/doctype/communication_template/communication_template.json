@@ -1,0 +1,24 @@
+{
+ "doctype": "DocType",
+ "name": "Communication Template",
+ "module": "Edupro School Fees",
+ "custom": 0,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "autoname": "hash",
+ "sort_field": "template_name",
+ "sort_order": "ASC",
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "template_name", "fieldtype": "Data", "label": "Template Name", "reqd": 1, "in_list_view": 1, "unique": 1},
+  {"fieldname": "channel", "fieldtype": "Select", "label": "Channel", "options": "SMS\nEmail\nPhone\nIn-Person", "default": "SMS", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "subject", "fieldtype": "Data", "label": "Subject (Email only)"},
+  {"fieldname": "body", "fieldtype": "Small Text", "label": "Body", "reqd": 1, "description": "Placeholders: {studentName}, {amount}, {ageingBucket}"}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1},
+  {"role": "Bursar", "read": 1, "write": 1, "create": 1, "delete": 1},
+  {"role": "School Head", "read": 1}
+ ]
+}
